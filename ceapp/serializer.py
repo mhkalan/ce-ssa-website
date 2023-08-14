@@ -12,6 +12,7 @@ class PostSerializer(serializers.ModelSerializer):
     class Meta:
         model = Post
         fields = '__all__'
+        read_only_fields = ['created_at']
 
 
 class TASerializer(serializers.ModelSerializer):
@@ -24,4 +25,20 @@ class TASerializer(serializers.ModelSerializer):
 class TAReportSerializer(serializers.Serializer):
     ta_name = serializers.CharField()
     text = serializers.CharField()
+
+
+class AdminPanelLoginSerializer(serializers.Serializer):
+    username = serializers.CharField()
+    password = serializers.CharField()
+
+
+class AdminPanelCreatePostSerializer(serializers.Serializer):
+    title = serializers.CharField()
+    description = serializers.CharField()
+
+
+class AdminPanelCreateTASerializer(serializers.Serializer):
+    name = serializers.CharField()
+    subject = serializers.CharField()
+    teacher = serializers.CharField()
 
