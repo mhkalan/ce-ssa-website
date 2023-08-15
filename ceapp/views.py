@@ -3,7 +3,7 @@ from rest_framework import generics
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.response import Response
 from rest_framework import status
-from rest_framework_simplejwt.tokens import RefreshToken
+from rest_framework_simplejwt.tokens import RefreshToken, AccessToken
 
 
 from .serializer import *
@@ -225,3 +225,45 @@ class AdminPanelTADetailAPIView(generics.ListCreateAPIView):
         except:
             return Response(data='Server Error', status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
+
+class ValidateTokenAPIView(generics.CreateAPIView):
+    serializer_class = ValidateTokenSerializer
+
+    def post(self, request, *args, **kwargs):
+        serializer = self.serializer_class(request.data)
+        access_token = serializer.data['access_token']
+
+        if not access_token:
+            return Response({"error": "Access token not provided."}, status=status.HTTP_400_BAD_REQUEST)
+
+        try:
+            token = AccessToken(access_token)
+            token_payload = token.payload
+        except Exception as e:
+            return Response({"error": "Invalid access token."}, status=status.HTTP_401_UNAUTHORIZED)
+
+        return Response({"message": "Token is valid.", "user_id": token_payload.get('user_id')})
+
+
+class DeletePostAPIView(generics.DestroyAPIView):
+    permission_classes = [IsAuthenticated]
+
+    def delete(self, request, *args, **kwargs):
+        pk = kwargs.get('pk')
+        if not Post.objects.filter(pk=pk).exists():
+            return Response(status=status.HTTP_404_NOT_FOUND)
+        post = Post.objects.get(pk=pk)
+        post.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
+
+
+class DeleteTaAPIView(generics.DestroyAPIView):
+    permission_classes = [IsAuthenticated]
+
+    def delete(self, request, *args, **kwargs):
+        pk = kwargs.get('pk')
+        if not TA.objects.filter(pk=pk).exists():
+            return Response(status=status.HTTP_404_NOT_FOUND)
+        ta = TA.objects.get(pk=pk)
+        ta.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)

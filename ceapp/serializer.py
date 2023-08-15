@@ -42,3 +42,6 @@ class AdminPanelCreateTASerializer(serializers.Serializer):
     subject = serializers.CharField()
     teacher = serializers.CharField()
 
+
+class ValidateTokenSerializer(serializers.Serializer):
+    access_token = serializers.CharField()

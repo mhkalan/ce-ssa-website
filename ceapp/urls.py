@@ -12,4 +12,8 @@ urlpatterns = [
     path('admin-panel/ta/', AdminPanelCreateTAAPIView.as_view(), name='admin-ta'),
     path('admin-panel/post/<int:pk>/', AdminPanelPostDetailAPIView.as_view(), name='admin-post-detail'),
     path('admin-panel/ta/<int:pk>/', AdminPanelTADetailAPIView.as_view(), name='admin-ta-detail'),
+    path('admin-panel/validate-token/', ValidateTokenAPIView.as_view(), name='validate-token'),
+    path('admin-panel/delete-post/<int:pk>', DeletePostAPIView.as_view(), name='delete-post'),
 ]
+
+
