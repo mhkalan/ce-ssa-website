@@ -7,3 +7,6 @@ from .models import *
 admin.site.register(Post)
 admin.site.register(TA)
 admin.site.register(TAReport)
+admin.site.register(Member)
+
+

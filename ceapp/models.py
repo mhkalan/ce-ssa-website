@@ -32,3 +32,14 @@ class TAReport(models.Model):
 
     def __str__(self):
         return f'Report of {self.TA.name}'
+
+
+class Member(models.Model):
+    name = models.CharField(max_length=255)
+    position = models.CharField(max_length=255)
+    image = models.ImageField(upload_to='images/', blank=True)
+
+    def __str__(self):
+        return self.name
+
+

@@ -20,10 +20,9 @@ class PostAPIView(generics.ListAPIView):
     def get(self, request, *args, **kwargs):
         try:
             posts = Post.objects.all()
-            serializer = self.serializer_class(posts, many=True)
+            serializer = self.get_serializer(posts, many=True)
             for post_data in serializer.data:
                 post_data['image'] = request.build_absolute_uri(post_data['image'])
-
             return Response(data=serializer.data, status=status.HTTP_200_OK)
         except:
             return Response(data='Server Error', status=status.HTTP_500_INTERNAL_SERVER_ERROR)
@@ -38,7 +37,7 @@ class PostDetailAPIView(generics.ListAPIView):
             if not Post.objects.filter(pk=pk).exists():
                 return Response(data='No Content', status=status.HTTP_404_NOT_FOUND)
             post = Post.objects.get(pk=pk)
-            serializer = self.serializer_class(post)
+            serializer = self.get_serializer(post)
             return Response(data=serializer.data, status=status.HTTP_200_OK)
         except:
             return Response(data='Server Error', status=status.HTTP_500_INTERNAL_SERVER_ERROR)
@@ -108,7 +107,7 @@ class AdminPanelCreatePostAPIView(generics.ListCreateAPIView):
     def get(self, request, *args, **kwargs):
         try:
             posts = Post.objects.all()
-            serializer = self.serializer_class(posts, many=True)
+            serializer = self.get_serializer(posts, many=True)
             for post_data in serializer.data:
                 post_data['image'] = request.build_absolute_uri(post_data['image'])
 
@@ -170,7 +169,7 @@ class AdminPanelPostDetailAPIView(generics.ListCreateAPIView):
             if not Post.objects.filter(pk=pk).exists():
                 return Response(data='No Content', status=status.HTTP_404_NOT_FOUND)
             post = Post.objects.get(pk=pk)
-            serializer = self.serializer_class(post)
+            serializer = self.get_serializer(post)
             return Response(data=serializer.data, status=status.HTTP_200_OK)
         except:
             return Response(data='Server Error', status=status.HTTP_500_INTERNAL_SERVER_ERROR)
@@ -202,7 +201,7 @@ class AdminPanelTADetailAPIView(generics.ListCreateAPIView):
             if not TA.objects.filter(pk=pk).exists():
                 return Response(data='No Content', status=status.HTTP_404_NOT_FOUND)
             ta = TA.objects.get(pk=pk)
-            serializer = self.serializer_class(ta)
+            serializer = self.get_serializer(ta)
             return Response(data=serializer.data, status=status.HTTP_200_OK)
         except:
             return Response(data='Server Error', status=status.HTTP_500_INTERNAL_SERVER_ERROR)
@@ -230,7 +229,7 @@ class ValidateTokenAPIView(generics.CreateAPIView):
     serializer_class = ValidateTokenSerializer
 
     def post(self, request, *args, **kwargs):
-        serializer = self.serializer_class(request.data)
+        serializer = self.get_serializer(request.data)
         access_token = serializer.data['access_token']
 
         if not access_token:
@@ -266,4 +265,90 @@ class DeleteTaAPIView(generics.DestroyAPIView):
             return Response(status=status.HTTP_404_NOT_FOUND)
         ta = TA.objects.get(pk=pk)
         ta.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
+
+
+class MemberAPIView(generics.ListAPIView):
+    serializer_class = MemberSerializer
+
+    def get(self, request, *args, **kwargs):
+        try:
+            members = Member.objects.all()
+            serializer = self.get_serializer(members, many=True)
+            return Response(data=serializer.data, status=status.HTTP_200_OK)
+        except:
+            return Response(data='Server Error', status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+
+class AdminPanelCreateMemberAPIView(generics.ListCreateAPIView):
+    serializer_class = MemberSerializer
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request, *args, **kwargs):
+        try:
+            members = Member.objects.all()
+            serializer = self.get_serializer(members, many=True)
+            return Response(data=serializer.data, status=status.HTTP_200_OK)
+        except:
+            return Response(data='Server Error', status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+    def post(self, request, *args, **kwargs):
+        try:
+            serializer = AdminPanelCreateMemberSerializer(request.data)
+            name = serializer.data['name']
+            position = serializer.data['position']
+            image = serializer.data['image']
+            Member.objects.create(
+                name=name,
+                position=position,
+                image=image
+            )
+            return Response(data=serializer.data, status=status.HTTP_200_OK)
+        except:
+            return Response(data='Server Error', status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+
+class AdminPanelMemberDetailAPIView(generics.ListCreateAPIView):
+    serializer_class = MemberSerializer
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request, *args, **kwargs):
+        try:
+            pk = kwargs.get('pk')
+            if not Member.objects.filter(pk=pk).exists():
+                return Response(status=status.HTTP_404_NOT_FOUND)
+            member = Member.objects.get(pk=pk)
+            serializer = self.get_serializer(member)
+            return Response(data=serializer.data, status=status.HTTP_200_OK)
+        except:
+            return Response(data='Server Error', status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+    def post(self, request, *args, **kwargs):
+        try:
+            pk = kwargs.get('pk')
+            if not Member.objects.filter(pk=pk).exists():
+                return Response(status=status.HTTP_404_NOT_FOUND)
+            serializer = AdminPanelCreateMemberSerializer(request.data)
+            member = Member.objects.get(pk=pk)
+            name = serializer.data['name']
+            position = serializer.data['position']
+            image = serializer.data['image']
+            member.name = name
+            member.position = position
+            member.image = image
+            member.save()
+            return Response(data=serializer.data, status=status.HTTP_200_OK)
+        except:
+            return Response(data='Server Error', status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+
+class DeleteMemberAPIView(generics.DestroyAPIView):
+    permission_classes = [IsAuthenticated]
+
+    def delete(self, request, *args, **kwargs):
+        pk = kwargs.get('pk')
+        if not Member.objects.filter(pk=pk).exists():
+            return Response(status=status.HTTP_404_NOT_FOUND)
+        member = Member.objects.get(pk=pk)
+        member.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)

@@ -45,3 +45,18 @@ class AdminPanelCreateTASerializer(serializers.Serializer):
 
 class ValidateTokenSerializer(serializers.Serializer):
     access_token = serializers.CharField()
+
+
+class MemberSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Member
+        fields = '__all__'
+
+
+class AdminPanelCreateMemberSerializer(serializers.Serializer):
+    name = serializers.CharField()
+    position = serializers.CharField()
+    image = serializers.CharField()
+
+
