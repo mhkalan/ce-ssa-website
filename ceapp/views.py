@@ -43,6 +43,20 @@ class PostDetailAPIView(generics.ListAPIView):
             return Response(data='Server Error', status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 
+class TopPostsAPIView(generics.ListAPIView):
+    serializer_class = PostSerializer
+
+    def get(self, request, *args, **kwargs):
+        try:
+            posts = Post.objects.all().order_by('-id')[:3]
+            serializer = self.get_serializer(posts, many=True)
+            for post_data in serializer.data:
+                post_data['image'] = request.build_absolute_uri(post_data['image'])
+            return Response(data=serializer.data, status=status.HTTP_200_OK)
+        except:
+            return Response(data='Server Error', status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+
 class TAAPIView(generics.ListAPIView):
     serializer_class = TASerializer
     permission_classes = [AllowAny]
@@ -397,7 +411,3 @@ class AdminPanelCreateSSAAPIView(generics.CreateAPIView):
             return Response(data=serializer.data, status=status.HTTP_200_OK)
         except:
             return Response(data='Server Error', status=status.HTTP_500_INTERNAL_SERVER_ERROR)
-
-
-
-

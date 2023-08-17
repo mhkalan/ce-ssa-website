@@ -5,6 +5,7 @@ from .views import *
 urlpatterns = [
     path('post/', PostAPIView.as_view(), name='post-view'),
     path('post/<int:pk>/', PostDetailAPIView.as_view(), name='post-detail'),
+    path('post/top/', TopPostsAPIView.as_view(), name='top-post'),
     path('ta/', TAAPIView.as_view(), name='ta-view'),
     path('report/', TAReportAPIView.as_view(), name='report-post'),
     path('admin-panel/login/', AdminPanelLoginAPIView.as_view(), name='admin-login'),
@@ -22,5 +23,4 @@ urlpatterns = [
     path('ssa/', SSAListCreateView.as_view(), name='ssa-list'),
     path('admin-panel/ssa/list/', AdminPanelListSSAAPIView.as_view(), name='admin-ssa-list'),
     path('admin-panel/ssa/create/', AdminPanelCreateSSAAPIView.as_view(), name='admin-ssa-create'),
-
 ]

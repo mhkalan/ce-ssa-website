@@ -9,4 +9,6 @@ admin.site.register(TA)
 admin.site.register(TAReport)
 admin.site.register(Member)
 admin.site.register(SSA)
-
+admin.site.register(QuestionText)
+admin.site.register(QuestionOption)
+admin.site.register(Poll)

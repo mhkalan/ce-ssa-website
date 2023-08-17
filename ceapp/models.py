@@ -51,3 +51,27 @@ class SSA(models.Model):
         return f"Company {self.year}"
 
 
+class QuestionText(models.Model):
+    text = models.CharField(max_length=500)
+    questionNumber = models.PositiveIntegerField()
+
+    def __str__(self):
+        return f'{self.questionNumber} -----> {self.text}'
+
+
+class QuestionOption(models.Model):
+    optionText = models.CharField(max_length=255)
+    optionPlace = models.IntegerField()
+    question = models.ForeignKey(QuestionText, on_delete=models.CASCADE)
+    answered = models.BooleanField(default=False)
+
+    def __str__(self):
+        return f'{self.question.questionNumber} ---- {self.optionPlace}'
+
+
+class Poll(models.Model):
+    person = models.ForeignKey(TA, on_delete=models.CASCADE)
+    question = models.ForeignKey(QuestionText, on_delete=models.SET_NULL, null=True)
+
+    def __str__(self):
+        return f'{self.person.name} --> {self.question.text}'
