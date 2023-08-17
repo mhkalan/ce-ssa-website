@@ -19,4 +19,8 @@ urlpatterns = [
     path('admin-panel/member/', AdminPanelCreateMemberAPIView.as_view(), name='admin-member'),
     path('admin-panel/member/<int:pk>/', AdminPanelMemberDetailAPIView.as_view(), name='admin-member-detail'),
     path('admin-panel/delete-member/<int:pk>/', DeleteMemberAPIView.as_view(), name='delete-member'),
+    path('ssa/', SSAListCreateView.as_view(), name='ssa-list'),
+    path('admin-panel/ssa/list/', AdminPanelListSSAAPIView.as_view(), name='admin-ssa-list'),
+    path('admin-panel/ssa/create/', AdminPanelCreateSSAAPIView.as_view(), name='admin-ssa-create'),
+
 ]

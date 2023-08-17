@@ -352,3 +352,52 @@ class DeleteMemberAPIView(generics.DestroyAPIView):
         member = Member.objects.get(pk=pk)
         member.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
+
+
+class SSAListCreateView(generics.ListAPIView):
+    serializer_class = SSASerializer
+
+    def get(self, request, *args, **kwargs):
+        try:
+            ssa = SSA.objects.all()
+            serializer = self.get_serializer(ssa, many=True)
+            return Response(data=serializer.data, status=status.HTTP_200_OK)
+        except:
+            return Response(data='Server Error', status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+
+class AdminPanelListSSAAPIView(generics.ListAPIView):
+    serializer_class = SSASerializer
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request, *args, **kwargs):
+        try:
+            ssa = SSA.objects.all()
+            serializer = self.get_serializer(ssa, many=True)
+            return Response(data=serializer.data, status=status.HTTP_200_OK)
+        except:
+            return Response(data='Server Error', status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+
+class AdminPanelCreateSSAAPIView(generics.CreateAPIView):
+    serializer_class = AdminPanelCreateSSASerializer
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request, *args, **kwargs):
+        try:
+            serializer = self.get_serializer(request.data)
+            year = serializer.data['year']
+            members = serializer.data['members']
+            members_info = []
+            for i in range(len(members)):
+                member = Member.objects.get(pk=members[i])
+                members_info.append(member)
+            ssa_instance = SSA.objects.create(year=year)
+            ssa_instance.members.set(members_info)
+            return Response(data=serializer.data, status=status.HTTP_200_OK)
+        except:
+            return Response(data='Server Error', status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+
+
+

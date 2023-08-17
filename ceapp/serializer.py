@@ -60,3 +60,21 @@ class AdminPanelCreateMemberSerializer(serializers.Serializer):
     image = serializers.CharField()
 
 
+class SSASerializer(serializers.ModelSerializer):
+    members = MemberSerializer(many=True, read_only=True)
+
+    class Meta:
+        model = SSA
+        fields = '__all__'
+
+
+class ListMembersField(serializers.ListField):
+    child = serializers.IntegerField()
+
+
+class AdminPanelCreateSSASerializer(serializers.Serializer):
+    year = serializers.IntegerField()
+    members = ListMembersField()
+
+
+
