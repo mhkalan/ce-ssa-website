@@ -35,6 +35,7 @@ class AdminPanelLoginSerializer(serializers.Serializer):
 class AdminPanelCreatePostSerializer(serializers.Serializer):
     title = serializers.CharField()
     description = serializers.CharField()
+    image = serializers.ImageField()
 
 
 class AdminPanelCreateTASerializer(serializers.Serializer):
@@ -57,7 +58,7 @@ class MemberSerializer(serializers.ModelSerializer):
 class AdminPanelCreateMemberSerializer(serializers.Serializer):
     name = serializers.CharField()
     position = serializers.CharField()
-    image = serializers.CharField()
+    image = serializers.ImageField()
 
 
 class SSASerializer(serializers.ModelSerializer):

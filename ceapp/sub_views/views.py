@@ -30,7 +30,7 @@ class PostAPIView(generics.ListAPIView):
             return Response(
                 {
                     'status': status.HTTP_500_INTERNAL_SERVER_ERROR,
-                    "msg": "متاسفانه سزوز دچار اخنلال شده است",
+                    "msg": "متاسفانه سرور دچار اخنلال شده است",
                 },
                 status=status.HTTP_500_INTERNAL_SERVER_ERROR
             )
@@ -64,7 +64,7 @@ class PostDetailAPIView(generics.ListAPIView):
             return Response(
                 {
                     'status': status.HTTP_500_INTERNAL_SERVER_ERROR,
-                    "msg": "متاسفانه سزوز دچار اخنلال شده است",
+                    "msg": "متاسفانه سرور دچار اخنلال شده است",
                 },
                 status=status.HTTP_500_INTERNAL_SERVER_ERROR
             )
@@ -91,7 +91,7 @@ class TopPostsAPIView(generics.ListAPIView):
             return Response(
                 {
                     'status': status.HTTP_500_INTERNAL_SERVER_ERROR,
-                    "msg": "متاسفانه سزوز دچار اخنلال شده است",
+                    "msg": "متاسفانه سرور دچار اخنلال شده است",
                 },
                 status=status.HTTP_500_INTERNAL_SERVER_ERROR
             )
@@ -118,7 +118,7 @@ class TAAPIView(generics.ListAPIView):
             return Response(
                 {
                     'status': status.HTTP_500_INTERNAL_SERVER_ERROR,
-                    "msg": "متاسفانه سزوز دچار اخنلال شده است",
+                    "msg": "متاسفانه سرور دچار اخنلال شده است",
                 },
                 status=status.HTTP_500_INTERNAL_SERVER_ERROR
             )
@@ -158,7 +158,7 @@ class TAReportAPIView(generics.CreateAPIView):
             return Response(
                 {
                     'status': status.HTTP_500_INTERNAL_SERVER_ERROR,
-                    "msg": "متاسفانه سزوز دچار اخنلال شده است",
+                    "msg": "متاسفانه سرور دچار اخنلال شده است",
                 },
                 status=status.HTTP_500_INTERNAL_SERVER_ERROR
             )
@@ -183,7 +183,7 @@ class MemberAPIView(generics.ListAPIView):
             return Response(
                 {
                     'status': status.HTTP_500_INTERNAL_SERVER_ERROR,
-                    "msg": "متاسفانه سزوز دچار اخنلال شده است",
+                    "msg": "متاسفانه سرور دچار اخنلال شده است",
                 },
                 status=status.HTTP_500_INTERNAL_SERVER_ERROR
             )
@@ -208,7 +208,7 @@ class SSAListCreateView(generics.ListAPIView):
             return Response(
                 {
                     'status': status.HTTP_500_INTERNAL_SERVER_ERROR,
-                    "msg": "متاسفانه سزوز دچار اخنلال شده است",
+                    "msg": "متاسفانه سرور دچار اخنلال شده است",
                 },
                 status=status.HTTP_500_INTERNAL_SERVER_ERROR
             )
@@ -219,8 +219,8 @@ class InfoListAPIView(generics.ListAPIView):
 
     def get(self, request, *args, **kwargs):
         try:
-            info = Info.objects.all()
-            serializer = self.get_serializer(info, many=True)
+            info = Info.objects.get(pk=1)
+            serializer = self.get_serializer(info)
             return Response(
                 {
                     'status': status.HTTP_200_OK,
@@ -233,7 +233,7 @@ class InfoListAPIView(generics.ListAPIView):
             return Response(
                 {
                     'status': status.HTTP_500_INTERNAL_SERVER_ERROR,
-                    "msg": "متاسفانه سزوز دچار اخنلال شده است",
+                    "msg": "متاسفانه سرور دچار اخنلال شده است",
                 },
                 status=status.HTTP_500_INTERNAL_SERVER_ERROR
             )
