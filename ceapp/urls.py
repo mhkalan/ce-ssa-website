@@ -17,20 +17,13 @@ urlpatterns = [
     path('admin-panel/delete-member/<int:pk>/', DeleteMemberAPIView.as_view(), name='delete-member'),
     path('admin-panel/ssa/list/', AdminPanelListSSAAPIView.as_view(), name='admin-ssa-list'),
     path('admin-panel/ssa/create/', AdminPanelCreateSSAAPIView.as_view(), name='admin-ssa-create'),
-    path('admin-panel/info/', AdminPanelInfoUpdateAPIView.as_view(), neme='admin-panel-info'),
-
+    path('admin-panel/info/', AdminPanelInfoUpdateAPIView.as_view(), name='admin-panel-info'),
     path('info/', InfoListAPIView.as_view(), name='info-list'),
-
     path('post/', PostAPIView.as_view(), name='post-view'),
     path('post/<int:pk>/', PostDetailAPIView.as_view(), name='post-detail'),
     path('post/top/', TopPostsAPIView.as_view(), name='top-post'),
-
     path('ta/', TAAPIView.as_view(), name='ta-view'),
-
     path('report/', TAReportAPIView.as_view(), name='report-post'),
-
     path('member/', MemberAPIView.as_view(), name='member-view'),
-
     path('ssa/', SSAListCreateView.as_view(), name='ssa-list'),
-
 ]
