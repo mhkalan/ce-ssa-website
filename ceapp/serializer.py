@@ -77,4 +77,15 @@ class AdminPanelCreateSSASerializer(serializers.Serializer):
     members = ListMembersField()
 
 
+class InfoSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Info
+        fields = '__all__'
+
+
+class AdminPanelInfoUpdateSerializer(serializers.Serializer):
+    aboutUs = serializers.CharField()
+    rights = serializers.CharField()
+    homepage = serializers.CharField()
 

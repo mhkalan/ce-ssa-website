@@ -75,3 +75,10 @@ class Poll(models.Model):
 
     def __str__(self):
         return f'{self.person.name} --> {self.question.text}'
+
+
+class Info(models.Model):
+    aboutUs = models.CharField(max_length=500)
+    rights = models.CharField(max_length=500)
+    homepage = models.CharField(max_length=500)
+

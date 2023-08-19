@@ -212,3 +212,29 @@ class SSAListCreateView(generics.ListAPIView):
                 },
                 status=status.HTTP_500_INTERNAL_SERVER_ERROR
             )
+
+
+class InfoListAPIView(generics.ListAPIView):
+    serializer_class = InfoSerializer
+
+    def get(self, request, *args, **kwargs):
+        try:
+            info = Info.objects.all()
+            serializer = self.get_serializer(info, many=True)
+            return Response(
+                {
+                    'status': status.HTTP_200_OK,
+                    "msg": "عملیات موفقیت‌آمیز بود",
+                    "data": serializer.data
+                },
+                status=status.HTTP_200_OK
+            )
+        except:
+            return Response(
+                {
+                    'status': status.HTTP_500_INTERNAL_SERVER_ERROR,
+                    "msg": "متاسفانه سزوز دچار اخنلال شده است",
+                },
+                status=status.HTTP_500_INTERNAL_SERVER_ERROR
+            )
+

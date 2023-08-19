@@ -601,3 +601,57 @@ class AdminPanelCreateSSAAPIView(generics.CreateAPIView):
                 },
                 status=status.HTTP_500_INTERNAL_SERVER_ERROR
             )
+
+
+class AdminPanelInfoUpdateAPIView(generics.ListCreateAPIView):
+    serializer_class = InfoSerializer
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request, *args, **kwargs):
+        try:
+            info = Info.objects.all()
+            serializer = self.get_serializer(info, many=True)
+            return Response(
+                {
+                    'status': status.HTTP_200_OK,
+                    "msg": "عملیات موفقیت‌آمیز بود",
+                    "data": serializer.data
+                },
+                status=status.HTTP_200_OK
+            )
+        except:
+            return Response(
+                {
+                    'status': status.HTTP_500_INTERNAL_SERVER_ERROR,
+                    "msg": "متاسفانه سزوز دچار اخنلال شده است",
+                },
+                status=status.HTTP_500_INTERNAL_SERVER_ERROR
+            )
+
+    def post(self, request, *args, **kwargs):
+        try:
+            info = Info.objects.get(pk=1)
+            serializer = AdminPanelInfoUpdateSerializer(request.data)
+            about_us = serializer.data['aboutUs']
+            rights = serializer.data['rights']
+            homepage = serializer.data['homepage']
+            info.aboutUs = about_us
+            info.rights = rights
+            info.homepage = homepage
+            info.save()
+            return Response(
+                {
+                    'status': status.HTTP_201_CREATED,
+                    "msg": "عملیات موفقیت‌آمیز بود",
+                    "data": serializer.data
+                },
+                status=status.HTTP_201_CREATED
+            )
+        except:
+            return Response(
+                {
+                    'status': status.HTTP_500_INTERNAL_SERVER_ERROR,
+                    "msg": "متاسفانه سزوز دچار اخنلال شده است",
+                },
+                status=status.HTTP_500_INTERNAL_SERVER_ERROR
+            )
