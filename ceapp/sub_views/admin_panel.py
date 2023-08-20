@@ -1,13 +1,12 @@
 from django.contrib.auth import authenticate
 from rest_framework import generics
 from rest_framework.permissions import AllowAny, IsAuthenticated
-from rest_framework.response import Response
-from rest_framework import status
 from rest_framework_simplejwt.tokens import RefreshToken, AccessToken
 
 
 from ..serializer import *
 from ..models import *
+from ..utills import *
 
 
 class AdminPanelLoginAPIView(generics.CreateAPIView):
@@ -20,41 +19,16 @@ class AdminPanelLoginAPIView(generics.CreateAPIView):
             password = request.data['password']
             user = authenticate(username=username, password=password)
             if user is None:
-                return Response(
-                    {
-                        'status': status.HTTP_404_NOT_FOUND,
-                        'msg': 'کاربر مورد نظر یافت نشد'
-                    },
-                    status=status.HTTP_404_NOT_FOUND
-                )
+                return status404response()
             if not user.is_superuser:
-                return Response(
-                    {
-                        'status': status.HTTP_401_UNAUTHORIZED,
-                        'msg': 'این کاربز ادمین نمیباشد'
-                    },
-                    status=status.HTTP_401_UNAUTHORIZED
-                )
+                return status401response()
             refresh = RefreshToken.for_user(user)
             data = {
                 'access': str(refresh.access_token),
             }
-            return Response(
-                {
-                    'status': status.HTTP_200_OK,
-                    "msg": "عملیات موفقیت‌آمیز بود",
-                    "data": data
-                },
-                status=status.HTTP_200_OK
-            )
+            return status200response(data)
         except:
-            return Response(
-                {
-                    'status': status.HTTP_500_INTERNAL_SERVER_ERROR,
-                    "msg": "متاسفانه سرور دچار اخنلال شده است",
-                },
-                status=status.HTTP_500_INTERNAL_SERVER_ERROR
-            )
+            return status500response()
 
 
 class AdminPanelCreatePostAPIView(generics.ListCreateAPIView):
@@ -67,22 +41,9 @@ class AdminPanelCreatePostAPIView(generics.ListCreateAPIView):
             serializer = self.get_serializer(posts, many=True)
             for post_data in serializer.data:
                 post_data['image'] = request.build_absolute_uri(post_data['image'])
-            return Response(
-                {
-                    'status': status.HTTP_200_OK,
-                    "msg": "عملیات موفقیت‌آمیز بود",
-                    "data": serializer.data
-                },
-                status=status.HTTP_200_OK
-            )
+            return status200response(serializer.data)
         except:
-            return Response(
-                {
-                    'status': status.HTTP_500_INTERNAL_SERVER_ERROR,
-                    "msg": "متاسفانه سرور دچار اخنلال شده است",
-                },
-                status=status.HTTP_500_INTERNAL_SERVER_ERROR
-            )
+            return status500response()
 
     def post(self, request, *args, **kwargs):
         try:
@@ -97,22 +58,9 @@ class AdminPanelCreatePostAPIView(generics.ListCreateAPIView):
                 description=description,
                 image=image
             )
-            return Response(
-                {
-                    'status': status.HTTP_201_CREATED,
-                    "msg": "عملیات موفقیت‌آمیز بود",
-                    "data": serializer.data
-                },
-                status=status.HTTP_201_CREATED
-            )
+            return status201response(serializer.data)
         except:
-            return Response(
-                {
-                    'status': status.HTTP_500_INTERNAL_SERVER_ERROR,
-                    "msg": "متاسفانه سرور دچار اخنلال شده است",
-                },
-                status=status.HTTP_500_INTERNAL_SERVER_ERROR
-            )
+            return status500response()
 
 
 class AdminPanelCreateTAAPIView(generics.ListCreateAPIView):
@@ -123,22 +71,9 @@ class AdminPanelCreateTAAPIView(generics.ListCreateAPIView):
         try:
             ta = TA.objects.all()
             serializer = self.get_serializer(ta, many=True)
-            return Response(
-                {
-                    'status': status.HTTP_200_OK,
-                    "msg": "عملیات موفقیت‌آمیز بود",
-                    "data": serializer.data
-                },
-                status=status.HTTP_200_OK
-            )
+            return status200response(serializer.data)
         except:
-            return Response(
-                {
-                    'status': status.HTTP_500_INTERNAL_SERVER_ERROR,
-                    "msg": "متاسفانه سرور دچار اخنلال شده است",
-                },
-                status=status.HTTP_500_INTERNAL_SERVER_ERROR
-            )
+            return status500response()
 
     def post(self, request, *args, **kwargs):
         try:
@@ -151,22 +86,9 @@ class AdminPanelCreateTAAPIView(generics.ListCreateAPIView):
                 subject=subject,
                 teacher=teacher
             )
-            return Response(
-                {
-                    'status': status.HTTP_201_CREATED,
-                    "msg": "عملیات موفقیت‌آمیز بود",
-                    "data": serializer.data
-                },
-                status=status.HTTP_201_CREATED
-            )
+            return status201response(serializer.data)
         except:
-            return Response(
-                {
-                    'status': status.HTTP_500_INTERNAL_SERVER_ERROR,
-                    "msg": "متاسفانه سرور دچار اخنلال شده است",
-                },
-                status=status.HTTP_500_INTERNAL_SERVER_ERROR
-            )
+            return status500response()
 
 
 class AdminPanelPostDetailAPIView(generics.ListCreateAPIView):
@@ -177,43 +99,18 @@ class AdminPanelPostDetailAPIView(generics.ListCreateAPIView):
         try:
             pk = kwargs.get('pk')
             if not Post.objects.filter(pk=pk).exists():
-                return Response(
-                    {
-                        'status': status.HTTP_404_NOT_FOUND,
-                        "msg": "رویداد موردنظر یافت نشد",
-                    },
-                    status=status.HTTP_404_NOT_FOUND
-                )
+                return status404response()
             post = Post.objects.get(pk=pk)
             serializer = self.get_serializer(post)
-            return Response(
-                {
-                    'status': status.HTTP_200_OK,
-                    "msg": "عملیات موفقیت‌آمیز بود",
-                    "data": serializer.data
-                },
-                status=status.HTTP_200_OK
-            )
+            return status200response(serializer.data)
         except:
-            return Response(
-                {
-                    'status': status.HTTP_500_INTERNAL_SERVER_ERROR,
-                    "msg": "متاسفانه سرور دچار اخنلال شده است",
-                },
-                status=status.HTTP_500_INTERNAL_SERVER_ERROR
-            )
+            return status500response()
 
     def post(self, request, *args, **kwargs):
         try:
             pk = kwargs.get('pk')
             if not Post.objects.filter(pk=pk).exists():
-                return Response(
-                    {
-                        'status': status.HTTP_404_NOT_FOUND,
-                        "msg": "رویداد موردنظر یافت نشد",
-                    },
-                    status=status.HTTP_404_NOT_FOUND
-                )
+                return status404response()
             serializer = AdminPanelCreatePostSerializer(request.data)
             title = serializer.data['title']
             description = serializer.data['description']
@@ -223,22 +120,9 @@ class AdminPanelPostDetailAPIView(generics.ListCreateAPIView):
             post.description = description
             post.image = image
             post.save()
-            return Response(
-                {
-                    'status': status.HTTP_201_CREATED,
-                    "msg": "عملیات موفقیت‌آمیز بود",
-                    "data": serializer.data
-                },
-                status=status.HTTP_201_CREATED
-            )
+            return status200response(serializer.data)
         except:
-            return Response(
-                {
-                    'status': status.HTTP_500_INTERNAL_SERVER_ERROR,
-                    "msg": "متاسفانه سرور دچار اخنلال شده است",
-                },
-                status=status.HTTP_500_INTERNAL_SERVER_ERROR
-            )
+            return status500response()
 
 
 class AdminPanelTADetailAPIView(generics.ListCreateAPIView):
@@ -249,43 +133,18 @@ class AdminPanelTADetailAPIView(generics.ListCreateAPIView):
         try:
             pk = kwargs.get('pk')
             if not TA.objects.filter(pk=pk).exists():
-                return Response(
-                    {
-                        'status': status.HTTP_404_NOT_FOUND,
-                        "msg": "حل تمرین موردنظر یافت نشد",
-                    },
-                    status=status.HTTP_404_NOT_FOUND
-                )
+                return status404response()
             ta = TA.objects.get(pk=pk)
             serializer = self.get_serializer(ta)
-            return Response(
-                {
-                    'status': status.HTTP_200_OK,
-                    "msg": "عملیات موفقیت‌آمیز بود",
-                    "data": serializer.data
-                },
-                status=status.HTTP_200_OK
-            )
+            return status200response(serializer.data)
         except:
-            return Response(
-                {
-                    'status': status.HTTP_500_INTERNAL_SERVER_ERROR,
-                    "msg": "متاسفانه سرور دچار اخنلال شده است",
-                },
-                status=status.HTTP_500_INTERNAL_SERVER_ERROR
-            )
+            return status500response()
 
     def post(self, request, *args, **kwargs):
         try:
             pk = kwargs.get('pk')
             if not TA.objects.filter(pk=pk).exists():
-                return Response(
-                    {
-                        'status': status.HTTP_404_NOT_FOUND,
-                        "msg": "حل تمرین موردنظر یافت نشد",
-                    },
-                    status=status.HTTP_404_NOT_FOUND
-                )
+                return status404response()
             serializer = AdminPanelCreateTASerializer(request.data)
             name = serializer.data['name']
             subject = serializer.data['subject']
@@ -295,22 +154,9 @@ class AdminPanelTADetailAPIView(generics.ListCreateAPIView):
             ta.subject = subject
             ta.teacher = teacher
             ta.save()
-            return Response(
-                {
-                    'status': status.HTTP_201_CREATED,
-                    "msg": "عملیات موفقیت‌آمیز بود",
-                    "data": serializer.data
-                },
-                status=status.HTTP_201_CREATED
-            )
+            return status201response(serializer.data)
         except:
-            return Response(
-                {
-                    'status': status.HTTP_500_INTERNAL_SERVER_ERROR,
-                    "msg": "متاسفانه سرور دچار اخنلال شده است",
-                },
-                status=status.HTTP_500_INTERNAL_SERVER_ERROR
-            )
+            return status500response()
 
 
 class ValidateTokenAPIView(generics.CreateAPIView):
@@ -320,24 +166,11 @@ class ValidateTokenAPIView(generics.CreateAPIView):
         serializer = self.get_serializer(request.data)
         access_token = serializer.data['access_token']
         if not access_token:
-            return Response(
-                {
-                    'status': status.HTTP_400_BAD_REQUEST,
-                    "msg": "شما نمیتوانید به عنوان ادمین وارد سایت شوید"
-                },
-                status=status.HTTP_400_BAD_REQUEST
-            )
-
+            return status400response()
         try:
             token = AccessToken(access_token)
         except Exception as e:
-            return Response(
-                {
-                    'status': status.HTTP_401_UNAUTHORIZED,
-                    "msg": "شما از سایت خارج شدید دوباره وارد سایت شوید"
-                },
-                status=status.HTTP_401_UNAUTHORIZED
-            )
+            return status401response()
 
         return Response(
             {
@@ -354,22 +187,10 @@ class DeletePostAPIView(generics.DestroyAPIView):
     def delete(self, request, *args, **kwargs):
         pk = kwargs.get('pk')
         if not Post.objects.filter(pk=pk).exists():
-            return Response(
-                {
-                    'status': status.HTTP_404_NOT_FOUND,
-                    "msg": "رویداد موردنظر یافت نشد",
-                },
-                status=status.HTTP_404_NOT_FOUND
-            )
+            return status404response()
         post = Post.objects.get(pk=pk)
         post.delete()
-        return Response(
-            {
-                "status": status.HTTP_204_NO_CONTENT,
-                'msg': 'رویداد مورد نظر با موفقیت حذف شد'
-            },
-            status=status.HTTP_204_NO_CONTENT
-        )
+        return status204response()
 
 
 class DeleteTaAPIView(generics.DestroyAPIView):
@@ -378,22 +199,10 @@ class DeleteTaAPIView(generics.DestroyAPIView):
     def delete(self, request, *args, **kwargs):
         pk = kwargs.get('pk')
         if not TA.objects.filter(pk=pk).exists():
-            return Response(
-                {
-                    'status': status.HTTP_404_NOT_FOUND,
-                    "msg": "حل تمرین موردنظر یافت نشد",
-                },
-                status=status.HTTP_404_NOT_FOUND
-            )
+            return status404response()
         ta = TA.objects.get(pk=pk)
         ta.delete()
-        return Response(
-            {
-                "status": status.HTTP_204_NO_CONTENT,
-                'msg': 'حل تمرین مورد نظر با موفقیت حذف شد'
-            },
-            status=status.HTTP_204_NO_CONTENT
-        )
+        return status204response()
 
 
 class AdminPanelCreateMemberAPIView(generics.ListCreateAPIView):
@@ -404,50 +213,24 @@ class AdminPanelCreateMemberAPIView(generics.ListCreateAPIView):
         try:
             members = Member.objects.all()
             serializer = self.get_serializer(members, many=True)
-            return Response(
-                {
-                    'status': status.HTTP_200_OK,
-                    "msg": "عملیات موفقیت‌آمیز بود",
-                    "data": serializer.data
-                },
-                status=status.HTTP_200_OK
-            )
+            return status200response(serializer.data)
         except:
-            return Response(
-                {
-                    'status': status.HTTP_500_INTERNAL_SERVER_ERROR,
-                    "msg": "متاسفانه سرور دچار اخنلال شده است",
-                },
-                status=status.HTTP_500_INTERNAL_SERVER_ERROR
-            )
+            return status500response()
 
     def post(self, request, *args, **kwargs):
-            try:
-                serializer = AdminPanelCreateMemberSerializer(request.data)
-                name = serializer.data['name']
-                position = serializer.data['position']
-                image = request.FILES.get('image')
-                Member.objects.create(
-                    name=name,
-                    position=position,
-                    image=image
-                )
-                return Response(
-                    {
-                        'status': status.HTTP_201_CREATED,
-                        "msg": "عملیات موفقیت‌آمیز بود",
-                        "data": serializer.data
-                    },
-                    status=status.HTTP_201_CREATED
-                )
-            except:
-                return Response(
-                    {
-                        'status': status.HTTP_500_INTERNAL_SERVER_ERROR,
-                        "msg": "متاسفانه سرور دچار اخنلال شده است",
-                    },
-                    status=status.HTTP_500_INTERNAL_SERVER_ERROR
-                )
+        try:
+            serializer = AdminPanelCreateMemberSerializer(request.data)
+            name = serializer.data['name']
+            position = serializer.data['position']
+            image = request.FILES.get('image')
+            Member.objects.create(
+                name=name,
+                position=position,
+                image=image
+            )
+            return status201response(serializer.data)
+        except:
+            return status500response()
 
 
 class AdminPanelMemberDetailAPIView(generics.ListCreateAPIView):
@@ -458,43 +241,18 @@ class AdminPanelMemberDetailAPIView(generics.ListCreateAPIView):
         try:
             pk = kwargs.get('pk')
             if not Member.objects.filter(pk=pk).exists():
-                return Response(
-                    {
-                        'status': status.HTTP_404_NOT_FOUND,
-                        "msg": "عضو موردنظر یافت نشد",
-                    },
-                    status=status.HTTP_404_NOT_FOUND
-                )
+                return status404response()
             member = Member.objects.get(pk=pk)
             serializer = self.get_serializer(member)
-            return Response(
-                {
-                    'status': status.HTTP_200_OK,
-                    "msg": "عملیات موفقیت‌آمیز بود",
-                    "data": serializer.data
-                },
-                status=status.HTTP_200_OK
-            )
+            return status200response(serializer.data)
         except:
-            return Response(
-                {
-                    'status': status.HTTP_500_INTERNAL_SERVER_ERROR,
-                    "msg": "متاسفانه سرور دچار اخنلال شده است",
-                },
-                status=status.HTTP_500_INTERNAL_SERVER_ERROR
-            )
+            return status500response()
 
     def post(self, request, *args, **kwargs):
         try:
             pk = kwargs.get('pk')
             if not Member.objects.filter(pk=pk).exists():
-                return Response(
-                    {
-                        'status': status.HTTP_404_NOT_FOUND,
-                        "msg": "عضو موردنظر یافت نشد",
-                    },
-                    status=status.HTTP_404_NOT_FOUND
-                )
+                return status404response()
             serializer = AdminPanelCreateMemberSerializer(request.data)
             member = Member.objects.get(pk=pk)
             name = serializer.data['name']
@@ -504,22 +262,9 @@ class AdminPanelMemberDetailAPIView(generics.ListCreateAPIView):
             member.position = position
             member.image = image
             member.save()
-            return Response(
-                {
-                    'status': status.HTTP_201_CREATED,
-                    "msg": "عملیات موفقیت‌آمیز بود",
-                    "data": serializer.data
-                },
-                status=status.HTTP_201_CREATED
-            )
+            return status201response(serializer.data)
         except:
-            return Response(
-                {
-                    'status': status.HTTP_500_INTERNAL_SERVER_ERROR,
-                    "msg": "متاسفانه سرور دچار اخنلال شده است",
-                },
-                status=status.HTTP_500_INTERNAL_SERVER_ERROR
-            )
+            return status500response()
 
 
 class DeleteMemberAPIView(generics.DestroyAPIView):
@@ -528,22 +273,10 @@ class DeleteMemberAPIView(generics.DestroyAPIView):
     def delete(self, request, *args, **kwargs):
         pk = kwargs.get('pk')
         if not Member.objects.filter(pk=pk).exists():
-            return Response(
-                {
-                    'status': status.HTTP_404_NOT_FOUND,
-                    "msg": "عضو موردنظر یافت نشد",
-                },
-                status=status.HTTP_404_NOT_FOUND
-            )
+            return status404response()
         member = Member.objects.get(pk=pk)
         member.delete()
-        return Response(
-            {
-                "status": status.HTTP_204_NO_CONTENT,
-                'msg': 'عضو مورد نظر با موفقیت حذف شد'
-            },
-            status=status.HTTP_204_NO_CONTENT
-        )
+        return status204response()
 
 
 class AdminPanelListSSAAPIView(generics.ListAPIView):
@@ -554,22 +287,9 @@ class AdminPanelListSSAAPIView(generics.ListAPIView):
         try:
             ssa = SSA.objects.all()
             serializer = self.get_serializer(ssa, many=True)
-            return Response(
-                {
-                    'status': status.HTTP_200_OK,
-                    "msg": "عملیات موفقیت‌آمیز بود",
-                    "data": serializer.data
-                },
-                status=status.HTTP_200_OK
-            )
+            return status200response(serializer.data)
         except:
-            return Response(
-                {
-                    'status': status.HTTP_500_INTERNAL_SERVER_ERROR,
-                    "msg": "متاسفانه سرور دچار اخنلال شده است",
-                },
-                status=status.HTTP_500_INTERNAL_SERVER_ERROR
-            )
+            return status500response()
 
 
 class AdminPanelCreateSSAAPIView(generics.CreateAPIView):
@@ -584,34 +304,15 @@ class AdminPanelCreateSSAAPIView(generics.CreateAPIView):
             members_info = []
             for i in range(len(members)):
                 if not Member.objects.filter(pk=members[i]).exists():
-                    return Response(
-                        {
-                            'status': status.HTTP_404_NOT_FOUND,
-                            "msg": "عضو موردنظر یافت نشد",
-                        },
-                        status=status.HTTP_404_NOT_FOUND
-                    )
+                    return status404response()
             for i in range(len(members)):
                 member = Member.objects.get(pk=members[i])
                 members_info.append(member)
             ssa_instance = SSA.objects.create(year=year)
             ssa_instance.members.set(members_info)
-            return Response(
-                {
-                    'status': status.HTTP_201_CREATED,
-                    "msg": "عملیات موفقیت‌آمیز بود",
-                    "data": serializer.data
-                },
-                status=status.HTTP_201_CREATED
-            )
+            return status201response(serializer.data)
         except:
-            return Response(
-                {
-                    'status': status.HTTP_500_INTERNAL_SERVER_ERROR,
-                    "msg": "متاسفانه سرور دچار اخنلال شده است",
-                },
-                status=status.HTTP_500_INTERNAL_SERVER_ERROR
-            )
+            return status500response()
 
 
 class AdminPanelInfoUpdateAPIView(generics.ListCreateAPIView):
@@ -622,22 +323,9 @@ class AdminPanelInfoUpdateAPIView(generics.ListCreateAPIView):
         try:
             info = Info.objects.get(pk=1)
             serializer = self.get_serializer(info)
-            return Response(
-                {
-                    'status': status.HTTP_200_OK,
-                    "msg": "عملیات موفقیت‌آمیز بود",
-                    "data": serializer.data
-                },
-                status=status.HTTP_200_OK
-            )
+            return status200response(serializer.data)
         except:
-            return Response(
-                {
-                    'status': status.HTTP_500_INTERNAL_SERVER_ERROR,
-                    "msg": "متاسفانه سرور دچار اخنلال شده است",
-                },
-                status=status.HTTP_500_INTERNAL_SERVER_ERROR
-            )
+            return status500response()
 
     def post(self, request, *args, **kwargs):
         try:
@@ -651,14 +339,7 @@ class AdminPanelInfoUpdateAPIView(generics.ListCreateAPIView):
                     rights=rights,
                     homepage=homepage
                 )
-                return Response(
-                    {
-                        'status': status.HTTP_201_CREATED,
-                        "msg": "عملیات موفقیت‌آمیز بود",
-                        "data": serializer.data
-                    },
-                    status=status.HTTP_201_CREATED
-                )
+                return status201response(serializer.data)
             info = Info.objects.get(pk=1)
             serializer = AdminPanelInfoUpdateSerializer(request.data)
             about_us = serializer.data['aboutUs']
@@ -668,19 +349,6 @@ class AdminPanelInfoUpdateAPIView(generics.ListCreateAPIView):
             info.rights = rights
             info.homepage = homepage
             info.save()
-            return Response(
-                {
-                    'status': status.HTTP_201_CREATED,
-                    "msg": "عملیات موفقیت‌آمیز بود",
-                    "data": serializer.data
-                },
-                status=status.HTTP_201_CREATED
-            )
+            return status201response(serializer.data)
         except:
-            return Response(
-                {
-                    'status': status.HTTP_500_INTERNAL_SERVER_ERROR,
-                    "msg": "متاسفانه سرور دچار اخنلال شده است",
-                },
-                status=status.HTTP_500_INTERNAL_SERVER_ERROR
-            )
+            return status500response()

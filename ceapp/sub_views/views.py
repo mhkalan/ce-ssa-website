@@ -1,11 +1,10 @@
 from rest_framework import generics
 from rest_framework.permissions import AllowAny
-from rest_framework.response import Response
-from rest_framework import status
 
 
 from ..serializer import *
 from ..models import *
+from ..utills import *
 
 
 class PostAPIView(generics.ListAPIView):
@@ -18,22 +17,9 @@ class PostAPIView(generics.ListAPIView):
             serializer = self.get_serializer(posts, many=True)
             for post_data in serializer.data:
                 post_data['image'] = request.build_absolute_uri(post_data['image'])
-            return Response(
-                {
-                    'status': status.HTTP_200_OK,
-                    "msg": "عملیات موفقیت‌آمیز بود",
-                    "data": serializer.data
-                },
-                status=status.HTTP_200_OK
-            )
+            return status200response(serializer.data)
         except:
-            return Response(
-                {
-                    'status': status.HTTP_500_INTERNAL_SERVER_ERROR,
-                    "msg": "متاسفانه سرور دچار اخنلال شده است",
-                },
-                status=status.HTTP_500_INTERNAL_SERVER_ERROR
-            )
+            return status500response()
 
 
 class PostDetailAPIView(generics.ListAPIView):
@@ -43,31 +29,12 @@ class PostDetailAPIView(generics.ListAPIView):
         try:
             pk = kwargs.get('pk')
             if not Post.objects.filter(pk=pk).exists():
-                return Response(
-                    {
-                        'status': status.HTTP_404_NOT_FOUND,
-                        "msg": "رویداد موردنظر یافت نشد",
-                    },
-                    status=status.HTTP_404_NOT_FOUND
-                )
+                return status404response()
             post = Post.objects.get(pk=pk)
             serializer = self.get_serializer(post)
-            return Response(
-                {
-                    'status': status.HTTP_200_OK,
-                    "msg": "عملیات موفقیت‌آمیز بود",
-                    "data": serializer.data
-                },
-                status=status.HTTP_200_OK
-            )
+            return status200response(serializer.data)
         except:
-            return Response(
-                {
-                    'status': status.HTTP_500_INTERNAL_SERVER_ERROR,
-                    "msg": "متاسفانه سرور دچار اخنلال شده است",
-                },
-                status=status.HTTP_500_INTERNAL_SERVER_ERROR
-            )
+            return status500response()
 
 
 class TopPostsAPIView(generics.ListAPIView):
@@ -79,22 +46,9 @@ class TopPostsAPIView(generics.ListAPIView):
             serializer = self.get_serializer(posts, many=True)
             for post_data in serializer.data:
                 post_data['image'] = request.build_absolute_uri(post_data['image'])
-            return Response(
-                {
-                    'status': status.HTTP_200_OK,
-                    "msg": "عملیات موفقیت‌آمیز بود",
-                    "data": serializer.data
-                },
-                status=status.HTTP_200_OK
-            )
+            return status200response(serializer.data)
         except:
-            return Response(
-                {
-                    'status': status.HTTP_500_INTERNAL_SERVER_ERROR,
-                    "msg": "متاسفانه سرور دچار اخنلال شده است",
-                },
-                status=status.HTTP_500_INTERNAL_SERVER_ERROR
-            )
+            return status500response()
 
 
 class TAAPIView(generics.ListAPIView):
@@ -106,22 +60,9 @@ class TAAPIView(generics.ListAPIView):
             ta = TA.objects.all()
             serializer = self.get_serializer(ta, many=True)
             names = [item['name'] for item in serializer.data]
-            return Response(
-                {
-                    'status': status.HTTP_200_OK,
-                    "msg": "عملیات موفقیت‌آمیز بود",
-                    "data": names
-                },
-                status=status.HTTP_200_OK
-            )
+            return status200response(names)
         except:
-            return Response(
-                {
-                    'status': status.HTTP_500_INTERNAL_SERVER_ERROR,
-                    "msg": "متاسفانه سرور دچار اخنلال شده است",
-                },
-                status=status.HTTP_500_INTERNAL_SERVER_ERROR
-            )
+            return status500response()
 
 
 class TAReportAPIView(generics.CreateAPIView):
@@ -133,35 +74,16 @@ class TAReportAPIView(generics.CreateAPIView):
             serializer = self.get_serializer(request.data)
             ta = serializer.data['ta_name']
             if not TA.objects.filter(name=ta).exists():
-                return Response(
-                    {
-                        'status': status.HTTP_404_NOT_FOUND,
-                        "msg": "حل تمرین موردنظر یافت نشد",
-                    },
-                    status=status.HTTP_404_NOT_FOUND
-                )
+                return status404response()
             ta_name = TA.objects.get(name=ta)
             text = serializer.data['text']
             TAReport.objects.create(
                 TA=ta_name,
                 text=text
             )
-            return Response(
-                {
-                    'status': status.HTTP_201_CREATED,
-                    "msg": "عملیات موفقیت‌آمیز بود",
-                    "data": serializer.data
-                },
-                status=status.HTTP_201_CREATED
-            )
+            return status201response(serializer.data)
         except:
-            return Response(
-                {
-                    'status': status.HTTP_500_INTERNAL_SERVER_ERROR,
-                    "msg": "متاسفانه سرور دچار اخنلال شده است",
-                },
-                status=status.HTTP_500_INTERNAL_SERVER_ERROR
-            )
+            return status500response()
 
 
 class MemberAPIView(generics.ListAPIView):
@@ -171,22 +93,9 @@ class MemberAPIView(generics.ListAPIView):
         try:
             members = Member.objects.all()
             serializer = self.get_serializer(members, many=True)
-            return Response(
-                {
-                    'status': status.HTTP_200_OK,
-                    "msg": "عملیات موفقیت‌آمیز بود",
-                    "data": serializer.data
-                },
-                status=status.HTTP_200_OK
-            )
+            return status200response(serializer.data)
         except:
-            return Response(
-                {
-                    'status': status.HTTP_500_INTERNAL_SERVER_ERROR,
-                    "msg": "متاسفانه سرور دچار اخنلال شده است",
-                },
-                status=status.HTTP_500_INTERNAL_SERVER_ERROR
-            )
+            return status500response()
 
 
 class SSAListCreateView(generics.ListAPIView):
@@ -196,22 +105,9 @@ class SSAListCreateView(generics.ListAPIView):
         try:
             ssa = SSA.objects.all()
             serializer = self.get_serializer(ssa, many=True)
-            return Response(
-                {
-                    'status': status.HTTP_200_OK,
-                    "msg": "عملیات موفقیت‌آمیز بود",
-                    "data": serializer.data
-                },
-                status=status.HTTP_200_OK
-            )
+            return status200response(serializer.data)
         except:
-            return Response(
-                {
-                    'status': status.HTTP_500_INTERNAL_SERVER_ERROR,
-                    "msg": "متاسفانه سرور دچار اخنلال شده است",
-                },
-                status=status.HTTP_500_INTERNAL_SERVER_ERROR
-            )
+            return status500response()
 
 
 class InfoListAPIView(generics.ListAPIView):
@@ -221,20 +117,6 @@ class InfoListAPIView(generics.ListAPIView):
         try:
             info = Info.objects.get(pk=1)
             serializer = self.get_serializer(info)
-            return Response(
-                {
-                    'status': status.HTTP_200_OK,
-                    "msg": "عملیات موفقیت‌آمیز بود",
-                    "data": serializer.data
-                },
-                status=status.HTTP_200_OK
-            )
+            return status200response(serializer.data)
         except:
-            return Response(
-                {
-                    'status': status.HTTP_500_INTERNAL_SERVER_ERROR,
-                    "msg": "متاسفانه سرور دچار اخنلال شده است",
-                },
-                status=status.HTTP_500_INTERNAL_SERVER_ERROR
-            )
-
+            return status500response()
