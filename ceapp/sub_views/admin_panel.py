@@ -315,6 +315,50 @@ class AdminPanelCreateSSAAPIView(generics.CreateAPIView):
             return status500response()
 
 
+class AdminPanelSSADetailAPIView(generics.ListAPIView):
+    serializer_class = SSASerializer
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request, *args, **kwargs):
+        try:
+            pk = kwargs.get('pk')
+            if not SSA.objects.filter(pk=pk).exists():
+                return status404response()
+            ssa = SSA.objects.get(pk=pk)
+            serializer = self.get_serializer(ssa)
+            return status200response(serializer.data)
+        except:
+            return status500response()
+
+
+class AdminPanelUpdateSSAAPIView(generics.CreateAPIView):
+    serializer_class = AdminPanelCreateSSASerializer
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request, *args, **kwargs):
+        try:
+            pk = kwargs.get('pk')
+            if not SSA.objects.filter(pk=pk).exists():
+                return status404response()
+            ssa = SSA.objects.get(pk=pk)
+            serializer = self.get_serializer(request.data)
+            year = serializer.data['year']
+            members = serializer.data['members']
+            members_info = []
+            for i in range(len(members)):
+                if not Member.objects.filter(pk=members[i]).exists():
+                    return status404response()
+            for i in range(len(members)):
+                member = Member.objects.get(pk=members[i])
+                members_info.append(member)
+            ssa.year = year
+            ssa.members.set(members_info)
+            ssa.save()
+            return status201response(serializer.data)
+        except:
+            return status500response()
+
+
 class AdminPanelInfoUpdateAPIView(generics.ListCreateAPIView):
     serializer_class = InfoSerializer
     permission_classes = [IsAuthenticated]
