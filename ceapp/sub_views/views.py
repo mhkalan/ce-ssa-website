@@ -59,8 +59,7 @@ class TAAPIView(generics.ListAPIView):
         try:
             ta = TA.objects.all()
             serializer = self.get_serializer(ta, many=True)
-            names = [item['name'] for item in serializer.data]
-            return status200response(names)
+            return status200response(serializer.data)
         except:
             return status500response()
 
