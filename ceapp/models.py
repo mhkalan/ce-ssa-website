@@ -25,6 +25,20 @@ class TA(models.Model):
         return self.name
 
 
+class Class(models.Model):
+    name = models.CharField(max_length=255)
+    group_number = models.CharField(max_length=10)
+    teacher_name = models.CharField(max_length=255)
+    class_time = models.CharField(max_length=100)
+    ta_class = models.CharField(max_length=100, null=True)
+    channel_link = models.CharField(max_length=400, null=True)
+    ta = models.ManyToManyField(TA, blank=True)
+    image = models.ImageField(upload_to='images/', blank=True)
+
+    def __str__(self):
+        return self.name
+
+
 class TAReport(models.Model):
     TA = models.ForeignKey(TA, on_delete=models.CASCADE)
     text = models.TextField(max_length=400)

@@ -396,3 +396,135 @@ class AdminPanelInfoUpdateAPIView(generics.ListCreateAPIView):
             return status201response(serializer.data)
         except:
             return status500response()
+
+
+class AdminPanelClassListAPIView(generics.ListAPIView):
+    serializer_class = ClassSerializer
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request, *args, **kwargs):
+        try:
+            class_info = Class.objects.all()
+            serializer = self.get_serializer(class_info, many=True)
+            for post_data in serializer.data:
+                post_data['image'] = request.build_absolute_uri(post_data['image'])
+            return status200response(serializer.data)
+        except:
+            return status500response()
+
+
+class AdminPanelCreateClassAPIView(generics.CreateAPIView):
+    serializer_class = AdminPanelCreateClassSerializer
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request, *args, **kwargs):
+        try:
+            serializer = self.get_serializer(request.data)
+            name = serializer.data['name']
+            group_number = serializer.data['group_number']
+            teacher_name = serializer.data['teacher_name']
+            class_time = serializer.data['class_time']
+            ta_class = serializer.data['ta_class']
+            channel_link = serializer.data['channel_link']
+            ta = serializer.data['ta']
+            image = request.FILES.get('image')
+            ta_info = []
+            for i in range(len(ta)):
+                if not TA.objects.filter(pk=ta[i]).exists():
+                    return status404response()
+            for i in range(len(ta)):
+                person = TA.objects.get(pk=ta[i])
+                ta_info.append(person)
+            class_instance = Class.objects.create(
+                name=name,
+                group_number=group_number,
+                teacher_name=teacher_name,
+                class_time=class_time,
+                ta_class=ta_class,
+                channel_link=channel_link,
+                image=image
+            )
+            class_instance.ta.set(ta_info)
+            return status201response(serializer.data)
+        except:
+            return status500response()
+
+
+class AdminPanelClassDetailAPIView(generics.ListAPIView):
+    serializer_class = ClassSerializer
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request, *args, **kwargs):
+        try:
+            pk = kwargs.get('pk')
+            if not Class.objects.filter(pk=pk).exists():
+                return status404response()
+            class_info = Class.objects.get(pk=pk)
+            serializer = self.get_serializer(class_info)
+            return status200response(serializer.data)
+        except:
+            return status500response()
+
+
+class AdminPanelUpdateClassAPIView(generics.CreateAPIView):
+    serializer_class = AdminPanelCreateClassSerializer
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request, *args, **kwargs):
+        try:
+            pk = kwargs.get('pk')
+            if not Class.objects.filter(pk=pk).exists():
+                return status404response()
+            class_info = Class.objects.get(pk=pk)
+            serializer = self.get_serializer(request.data)
+            name = serializer.data['name']
+            group_number = serializer.data['group_number']
+            teacher_name = serializer.data['teacher_name']
+            class_time = serializer.data['class_time']
+            ta_class = serializer.data['ta_class']
+            channel_link = serializer.data['channel_link']
+            ta = serializer.data['ta']
+            image = request.FILES.get('image')
+            ta_info = []
+            for i in range(len(ta)):
+                if not TA.objects.filter(pk=ta[i]).exists():
+                    return status404response()
+            for i in range(len(ta)):
+                person = TA.objects.get(pk=ta[i])
+                ta_info.append(person)
+            class_info.name = name
+            class_info.group_number = group_number
+            class_info.teacher_name = teacher_name
+            class_info.class_time = class_time
+            class_info.ta_class = ta_class
+            class_info.channel_link = channel_link
+            class_info.image = image
+            class_info.ta.set(ta_info)
+            class_info.save()
+            return status201response(serializer.data)
+        except:
+            return status500response()
+
+
+class DeleteSSAAPIView(generics.DestroyAPIView):
+    permission_classes = [IsAuthenticated]
+
+    def delete(self, request, *args, **kwargs):
+        pk = kwargs.get('pk')
+        if not SSA.objects.filter(pk=pk).exists():
+            return status404response()
+        ssa = SSA.objects.get(pk=pk)
+        ssa.delete()
+        return status204response()
+
+
+class DeleteClassAPIView(generics.DestroyAPIView):
+    permission_classes = [IsAuthenticated]
+
+    def delete(self, request, *args, **kwargs):
+        pk = kwargs.get('pk')
+        if not Class.objects.filter(pk=pk).exists():
+            return status404response()
+        class_instance = Class.objects.get(pk=pk)
+        class_instance.delete()
+        return status204response()

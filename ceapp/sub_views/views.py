@@ -32,6 +32,7 @@ class PostDetailAPIView(generics.ListAPIView):
                 return status404response()
             post = Post.objects.get(pk=pk)
             serializer = self.get_serializer(post)
+            serializer.data['image'] = request.build_absolute_uri(serializer.data['image'])
             return status200response(serializer.data)
         except:
             return status500response()
@@ -97,7 +98,7 @@ class MemberAPIView(generics.ListAPIView):
             return status500response()
 
 
-class SSAListCreateView(generics.ListAPIView):
+class SSAListView(generics.ListAPIView):
     serializer_class = SSASerializer
 
     def get(self, request, *args, **kwargs):
@@ -119,3 +120,34 @@ class InfoListAPIView(generics.ListAPIView):
             return status200response(serializer.data)
         except:
             return status500response()
+
+
+class ClassListAPIView(generics.ListAPIView):
+    serializer_class = ClassSerializer
+
+    def get(self, request, *args, **kwargs):
+        try:
+            class_info = Class.objects.all()
+            serializer = self.get_serializer(class_info, many=True)
+            for post_data in serializer.data:
+                post_data['image'] = request.build_absolute_uri(post_data['image'])
+            return status200response(serializer.data)
+        except:
+            return status500response()
+
+
+class ClassDetailAPIView(generics.ListAPIView):
+    serializer_class = ClassSerializer
+
+    def get(self, request, *args, **kwargs):
+        try:
+            pk = kwargs.get('pk')
+            if not Class.objects.filter(pk=pk).exists():
+                return status404response()
+            class_info = Class.objects.get(pk=pk)
+            serializer = self.get_serializer(class_info)
+            serializer.data['image'] = request.build_absolute_uri(serializer.data['image'])
+            return status200response(serializer.data)
+        except:
+            return status500response()
+

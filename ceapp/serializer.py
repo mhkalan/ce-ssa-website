@@ -90,3 +90,26 @@ class AdminPanelInfoUpdateSerializer(serializers.Serializer):
     rights = serializers.CharField()
     homepage = serializers.CharField()
 
+
+class ClassSerializer(serializers.ModelSerializer):
+    members = TASerializer(many=True, read_only=True)
+
+    class Meta:
+        model = Class
+        fields = '__all__'
+
+
+class ListTAField(serializers.ListField):
+    child = serializers.IntegerField()
+
+
+class AdminPanelCreateClassSerializer(serializers.Serializer):
+    name = serializers.CharField()
+    group_number = serializers.CharField()
+    teacher_name = serializers.CharField()
+    class_time = serializers.CharField()
+    ta_class = serializers.CharField()
+    channel_link = serializers.CharField()
+    ta = ListTAField()
+    image = serializers.ImageField()
+

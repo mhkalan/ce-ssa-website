@@ -19,6 +19,12 @@ urlpatterns = [
     path('admin-panel/ssa/create/', AdminPanelCreateSSAAPIView.as_view(), name='admin-ssa-create'),
     path('admin-panel/ssa/detail/<int:pk>/', AdminPanelSSADetailAPIView.as_view(), name='admin-ssa-detail'),
     path('admin-panel/ssa/update/<int:pk>/', AdminPanelUpdateSSAAPIView.as_view(), name='admin-ssa-update'),
+    path('admin-panel/ssa/delete/<int:pk>/', DeleteSSAAPIView.as_view(), name='delete-ssa'),
+    path('admin-panel/class/list/', AdminPanelClassListAPIView.as_view(), name='admin-class-list'),
+    path('admin-panel/class/create/', AdminPanelCreateClassAPIView.as_view(), name='admin-class-create'),
+    path('admin-panel/class/detail/<int:pk>/', AdminPanelClassDetailAPIView.as_view(), name='admin-class-detail'),
+    path('admin-panel/class/update/<int:pk>/', AdminPanelClassDetailAPIView.as_view(), name='admin-class-update'),
+    path('admin-pamel/class/delete/<int:pk>/', DeleteClassAPIView.as_view(), name='delete-class'),
     path('admin-panel/info/', AdminPanelInfoUpdateAPIView.as_view(), name='admin-panel-info'),
 
     path('info/', InfoListAPIView.as_view(), name='info-list'),
@@ -32,5 +38,8 @@ urlpatterns = [
 
     path('member/', MemberAPIView.as_view(), name='member-view'),
 
-    path('ssa/', SSAListCreateView.as_view(), name='ssa-list'),
+    path('ssa/', SSAListView.as_view(), name='ssa-list'),
+
+    path('class/', ClassListAPIView.as_view(), name='class-list'),
+    path('class/<int:pk>/', ClassDetailAPIView.as_view(), name='class-detail'),
 ]
