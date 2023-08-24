@@ -19,7 +19,7 @@ class AdminPanelLoginAPIView(generics.CreateAPIView):
             password = request.data['password']
             user = authenticate(username=username, password=password)
             if user is None:
-                return status404response()
+                return status404response(msg='چنین کاربری وجود ندارد')
             if not user.is_superuser:
                 return status401response()
             refresh = RefreshToken.for_user(user)
@@ -99,7 +99,7 @@ class AdminPanelPostDetailAPIView(generics.ListCreateAPIView):
         try:
             pk = kwargs.get('pk')
             if not Post.objects.filter(pk=pk).exists():
-                return status404response()
+                return status404response(msg='رویداد مورد نظر یافت نشد')
             post = Post.objects.get(pk=pk)
             serializer = self.get_serializer(post)
             return status200response(serializer.data)
@@ -110,7 +110,7 @@ class AdminPanelPostDetailAPIView(generics.ListCreateAPIView):
         try:
             pk = kwargs.get('pk')
             if not Post.objects.filter(pk=pk).exists():
-                return status404response()
+                return status404response(msg='رویداد مورد نظر یافت نشد')
             serializer = AdminPanelCreatePostSerializer(request.data)
             title = serializer.data['title']
             description = serializer.data['description']
@@ -133,7 +133,7 @@ class AdminPanelTADetailAPIView(generics.ListCreateAPIView):
         try:
             pk = kwargs.get('pk')
             if not TA.objects.filter(pk=pk).exists():
-                return status404response()
+                return status404response(msg='حل تمرین مورد نظر یافت نشد')
             ta = TA.objects.get(pk=pk)
             serializer = self.get_serializer(ta)
             return status200response(serializer.data)
@@ -144,7 +144,7 @@ class AdminPanelTADetailAPIView(generics.ListCreateAPIView):
         try:
             pk = kwargs.get('pk')
             if not TA.objects.filter(pk=pk).exists():
-                return status404response()
+                return status404response(msg='حل تمرین مورد نظر یافت نشد')
             serializer = AdminPanelCreateTASerializer(request.data)
             name = serializer.data['name']
             subject = serializer.data['subject']
@@ -187,7 +187,7 @@ class DeletePostAPIView(generics.DestroyAPIView):
     def delete(self, request, *args, **kwargs):
         pk = kwargs.get('pk')
         if not Post.objects.filter(pk=pk).exists():
-            return status404response()
+            return status404response(msg='رویداد مورد نظر یافت نشد')
         post = Post.objects.get(pk=pk)
         post.delete()
         return status204response()
@@ -199,7 +199,7 @@ class DeleteTaAPIView(generics.DestroyAPIView):
     def delete(self, request, *args, **kwargs):
         pk = kwargs.get('pk')
         if not TA.objects.filter(pk=pk).exists():
-            return status404response()
+            return status404response(msg='حل تمرین مورد نظر یافت نشد')
         ta = TA.objects.get(pk=pk)
         ta.delete()
         return status204response()
@@ -241,7 +241,7 @@ class AdminPanelMemberDetailAPIView(generics.ListCreateAPIView):
         try:
             pk = kwargs.get('pk')
             if not Member.objects.filter(pk=pk).exists():
-                return status404response()
+                return status404response(msg='عضو مورد نظر یافت نشد')
             member = Member.objects.get(pk=pk)
             serializer = self.get_serializer(member)
             return status200response(serializer.data)
@@ -252,7 +252,7 @@ class AdminPanelMemberDetailAPIView(generics.ListCreateAPIView):
         try:
             pk = kwargs.get('pk')
             if not Member.objects.filter(pk=pk).exists():
-                return status404response()
+                return status404response(msg='عضو مورد نظر یافت نشد')
             serializer = AdminPanelCreateMemberSerializer(request.data)
             member = Member.objects.get(pk=pk)
             name = serializer.data['name']
@@ -273,7 +273,7 @@ class DeleteMemberAPIView(generics.DestroyAPIView):
     def delete(self, request, *args, **kwargs):
         pk = kwargs.get('pk')
         if not Member.objects.filter(pk=pk).exists():
-            return status404response()
+            return status404response(msg='عضو مورد نظر یافت نشد')
         member = Member.objects.get(pk=pk)
         member.delete()
         return status204response()
@@ -304,7 +304,7 @@ class AdminPanelCreateSSAAPIView(generics.CreateAPIView):
             members_info = []
             for i in range(len(members)):
                 if not Member.objects.filter(pk=members[i]).exists():
-                    return status404response()
+                    return status404response(msg='عضو مورد نظر یافت نشد')
             for i in range(len(members)):
                 member = Member.objects.get(pk=members[i])
                 members_info.append(member)
@@ -323,7 +323,7 @@ class AdminPanelSSADetailAPIView(generics.ListAPIView):
         try:
             pk = kwargs.get('pk')
             if not SSA.objects.filter(pk=pk).exists():
-                return status404response()
+                return status404response(msg='انجمن مورد نظر یافت نشد')
             ssa = SSA.objects.get(pk=pk)
             serializer = self.get_serializer(ssa)
             return status200response(serializer.data)
@@ -339,7 +339,7 @@ class AdminPanelUpdateSSAAPIView(generics.CreateAPIView):
         try:
             pk = kwargs.get('pk')
             if not SSA.objects.filter(pk=pk).exists():
-                return status404response()
+                return status404response(msg='انجمن مورد نظر یافت نشد')
             ssa = SSA.objects.get(pk=pk)
             serializer = self.get_serializer(request.data)
             year = serializer.data['year']
@@ -347,7 +347,7 @@ class AdminPanelUpdateSSAAPIView(generics.CreateAPIView):
             members_info = []
             for i in range(len(members)):
                 if not Member.objects.filter(pk=members[i]).exists():
-                    return status404response()
+                    return status404response(msg='عضو مورد نظر یافت نشد')
             for i in range(len(members)):
                 member = Member.objects.get(pk=members[i])
                 members_info.append(member)
@@ -431,7 +431,7 @@ class AdminPanelCreateClassAPIView(generics.CreateAPIView):
             ta_info = []
             for i in range(len(ta)):
                 if not TA.objects.filter(pk=ta[i]).exists():
-                    return status404response()
+                    return status404response(msg='حل تمرین مورد نظر یافت نشد')
             for i in range(len(ta)):
                 person = TA.objects.get(pk=ta[i])
                 ta_info.append(person)
@@ -458,7 +458,7 @@ class AdminPanelClassDetailAPIView(generics.ListAPIView):
         try:
             pk = kwargs.get('pk')
             if not Class.objects.filter(pk=pk).exists():
-                return status404response()
+                return status404response(msg='درس مورد نظر یافت نشد')
             class_info = Class.objects.get(pk=pk)
             serializer = self.get_serializer(class_info)
             return status200response(serializer.data)
@@ -474,7 +474,7 @@ class AdminPanelUpdateClassAPIView(generics.CreateAPIView):
         try:
             pk = kwargs.get('pk')
             if not Class.objects.filter(pk=pk).exists():
-                return status404response()
+                return status404response(msg='درس مورد نظر یافت نشد')
             class_info = Class.objects.get(pk=pk)
             serializer = self.get_serializer(request.data)
             name = serializer.data['name']
@@ -488,7 +488,7 @@ class AdminPanelUpdateClassAPIView(generics.CreateAPIView):
             ta_info = []
             for i in range(len(ta)):
                 if not TA.objects.filter(pk=ta[i]).exists():
-                    return status404response()
+                    return status404response(msg='حل تمرین مورد نظر یافت نشد')
             for i in range(len(ta)):
                 person = TA.objects.get(pk=ta[i])
                 ta_info.append(person)
@@ -512,7 +512,7 @@ class DeleteSSAAPIView(generics.DestroyAPIView):
     def delete(self, request, *args, **kwargs):
         pk = kwargs.get('pk')
         if not SSA.objects.filter(pk=pk).exists():
-            return status404response()
+            return status404response(msg='انجمن مورد نظر یافت نشد')
         ssa = SSA.objects.get(pk=pk)
         ssa.delete()
         return status204response()
@@ -524,7 +524,7 @@ class DeleteClassAPIView(generics.DestroyAPIView):
     def delete(self, request, *args, **kwargs):
         pk = kwargs.get('pk')
         if not Class.objects.filter(pk=pk).exists():
-            return status404response()
+            return status404response(msg='درس مورد نظر یافت نشد')
         class_instance = Class.objects.get(pk=pk)
         class_instance.delete()
         return status204response()

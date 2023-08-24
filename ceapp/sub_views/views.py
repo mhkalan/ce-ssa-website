@@ -29,7 +29,7 @@ class PostDetailAPIView(generics.ListAPIView):
         try:
             pk = kwargs.get('pk')
             if not Post.objects.filter(pk=pk).exists():
-                return status404response()
+                return status404response(msg='رویداد مورد نظر یافت نشد')
             post = Post.objects.get(pk=pk)
             serializer = self.get_serializer(post)
             serializer.data['image'] = request.build_absolute_uri(serializer.data['image'])
@@ -74,7 +74,7 @@ class TAReportAPIView(generics.CreateAPIView):
             serializer = self.get_serializer(request.data)
             ta = serializer.data['ta_name']
             if not TA.objects.filter(name=ta).exists():
-                return status404response()
+                return status404response(msg='حل تمرین مورد نظر یافت نشد')
             ta_name = TA.objects.get(name=ta)
             text = serializer.data['text']
             TAReport.objects.create(
@@ -143,7 +143,7 @@ class ClassDetailAPIView(generics.ListAPIView):
         try:
             pk = kwargs.get('pk')
             if not Class.objects.filter(pk=pk).exists():
-                return status404response()
+                return status404response(msg='درس مورد نظر یافت نشد')
             class_info = Class.objects.get(pk=pk)
             serializer = self.get_serializer(class_info)
             serializer.data['image'] = request.build_absolute_uri(serializer.data['image'])

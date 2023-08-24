@@ -23,11 +23,11 @@ def status500response():
             )
 
 
-def status404response():
+def status404response(msg):
     return Response(
                     {
                         'status': status.HTTP_404_NOT_FOUND,
-                        "msg": "درخواست موردنظر یافت نشد",
+                        "msg": msg,
                     },
                     status=status.HTTP_404_NOT_FOUND
                 )
