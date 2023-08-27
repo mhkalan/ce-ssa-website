@@ -24,7 +24,7 @@ urlpatterns = [
     path('admin-panel/class/create/', AdminPanelCreateClassAPIView.as_view(), name='admin-class-create'),
     path('admin-panel/class/detail/<int:pk>/', AdminPanelClassDetailAPIView.as_view(), name='admin-class-detail'),
     path('admin-panel/class/update/<int:pk>/', AdminPanelClassDetailAPIView.as_view(), name='admin-class-update'),
-    path('admin-pamel/class/delete/<int:pk>/', DeleteClassAPIView.as_view(), name='delete-class'),
+    path('admin-panel/class/delete/<int:pk>/', DeleteClassAPIView.as_view(), name='delete-class'),
     path('admin-panel/info/', AdminPanelInfoUpdateAPIView.as_view(), name='admin-panel-info'),
 
     path('info/', InfoListAPIView.as_view(), name='info-list'),
