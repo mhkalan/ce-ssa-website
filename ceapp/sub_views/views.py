@@ -77,9 +77,13 @@ class TAReportAPIView(generics.CreateAPIView):
                 return status404response(msg='حل تمرین مورد نظر یافت نشد')
             ta_name = TA.objects.get(name=ta)
             text = serializer.data['text']
+            name = serializer.data['name']
+            email = serializer.data['email']
             TAReport.objects.create(
                 TA=ta_name,
-                text=text
+                text=text,
+                name=name,
+                email=email
             )
             return status201response(serializer.data)
         except:

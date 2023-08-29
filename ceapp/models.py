@@ -42,6 +42,8 @@ class Class(models.Model):
 class TAReport(models.Model):
     TA = models.ForeignKey(TA, on_delete=models.CASCADE)
     text = models.TextField(max_length=400)
+    name = models.CharField(max_length=255, null=True)
+    email = models.CharField(max_length=255)
     report_date = models.DateTimeField(default=timezone.now)
 
     def __str__(self):

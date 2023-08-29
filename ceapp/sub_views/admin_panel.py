@@ -528,3 +528,32 @@ class DeleteClassAPIView(generics.DestroyAPIView):
         class_instance = Class.objects.get(pk=pk)
         class_instance.delete()
         return status204response()
+
+
+class AdminPanelGetTAReportAPIView(generics.ListAPIView):
+    serializer_class = TAReportGetSerializer
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request, *args, **kwargs):
+        try:
+            reports = TAReport.objects.all()
+            serializer = self.get_serializer(reports, many=True)
+            return status200response(serializer.data)
+        except:
+            return status500response()
+
+
+class AdminPanelGetTAReportByNameAPIView(generics.ListAPIView):
+    serializer_class = TAReportGetSerializer
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request, *args, **kwargs):
+        try:
+            name = kwargs.get('name')
+            if not TAReport.objects.filter(TA__name=name).exists():
+                return status404response('حل تمرین مورد نظر یافت نشد')
+            reports = TAReport.objects.filter(TA__name=name)
+            serializer = self.get_serializer(reports, many=True)
+            return status200response(serializer.data)
+        except:
+            return status500response()

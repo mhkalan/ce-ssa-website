@@ -25,6 +25,20 @@ class TASerializer(serializers.ModelSerializer):
 class TAReportSerializer(serializers.Serializer):
     ta_name = serializers.CharField()
     text = serializers.CharField()
+    name = serializers.CharField()
+    email = serializers.CharField()
+
+
+class TAReportGetSerializer(serializers.ModelSerializer):
+
+    def get_name(self, obj):
+        return obj.TA.name
+
+    name = serializers.SerializerMethodField('get_name', read_only=True)
+
+    class Meta:
+        model = TAReport
+        fields = '__all__'
 
 
 class AdminPanelLoginSerializer(serializers.Serializer):
