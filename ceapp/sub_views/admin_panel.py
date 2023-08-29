@@ -557,3 +557,16 @@ class AdminPanelGetTAReportByNameAPIView(generics.ListAPIView):
             return status200response(serializer.data)
         except:
             return status500response()
+
+
+class DeleteTAReportAPIView(generics.DestroyAPIView):
+    permission_classes = [IsAuthenticated]
+
+    def delete(self, request, *args, **kwargs):
+        pk = kwargs.get('pk')
+        if not TAReport.objects.filter(pk=pk).exists():
+            return status404response('گزارش مورد نظر یافت نشد')
+        report = TAReport.objects.get(pk=pk)
+        report.delete()
+        return status204response()
+

@@ -23,12 +23,13 @@ urlpatterns = [
     path('admin-panel/class/list/', AdminPanelClassListAPIView.as_view(), name='admin-class-list'),
     path('admin-panel/class/create/', AdminPanelCreateClassAPIView.as_view(), name='admin-class-create'),
     path('admin-panel/class/detail/<int:pk>/', AdminPanelClassDetailAPIView.as_view(), name='admin-class-detail'),
-    path('admin-panel/class/update/<int:pk>/', AdminPanelClassDetailAPIView.as_view(), name='admin-class-update'),
+    path('admin-panel/class/update/<int:pk>/', AdminPanelUpdateClassAPIView.as_view(), name='admin-class-update'),
     path('admin-panel/class/delete/<int:pk>/', DeleteClassAPIView.as_view(), name='delete-class'),
     path('admin-panel/info/', AdminPanelInfoUpdateAPIView.as_view(), name='admin-panel-info'),
     path('admin-panel/report/', AdminPanelGetTAReportAPIView.as_view(), name='admin-panel-report'),
     path('admin-panel/report/<str:name>/', AdminPanelGetTAReportByNameAPIView.as_view(),
          name='admin-panel-report-name'),
+    path('admin-panel/report/delete/<int:pk>/', DeleteTAReportAPIView.as_view(), name='delete-report'),
 
     path('info/', InfoListAPIView.as_view(), name='info-list'),
 

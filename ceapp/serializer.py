@@ -106,7 +106,7 @@ class AdminPanelInfoUpdateSerializer(serializers.Serializer):
 
 
 class ClassSerializer(serializers.ModelSerializer):
-    members = TASerializer(many=True, read_only=True)
+    ta = TASerializer(many=True, read_only=True)
 
     class Meta:
         model = Class
