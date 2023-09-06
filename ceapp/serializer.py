@@ -2,6 +2,12 @@ from rest_framework import serializers
 from .models import *
 
 
+class SuperuserSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = ['username', 'email']
+
+
 class PostSerializer(serializers.ModelSerializer):
 
     def get_author(self, obj):

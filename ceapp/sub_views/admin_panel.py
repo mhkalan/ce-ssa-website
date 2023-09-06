@@ -1,12 +1,27 @@
-from django.contrib.auth import authenticate
+from django.contrib.auth import authenticate, get_user_model
 from rest_framework import generics
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework_simplejwt.tokens import RefreshToken, AccessToken
 
-
 from ..serializer import *
 from ..models import *
 from ..utills import *
+
+User = get_user_model()
+
+
+class AdminInformationAPIView(generics.ListAPIView):
+    serializer_class = SuperuserSerializer
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request, *args, **kwargs):
+        try:
+            user = request.user
+            user_information = User.objects.get(username=user)
+            serializer = self.get_serializer(user_information)
+            return status200response(serializer.data)
+        except:
+            return status500response()
 
 
 class AdminPanelLoginAPIView(generics.CreateAPIView):
@@ -569,4 +584,3 @@ class DeleteTAReportAPIView(generics.DestroyAPIView):
         report = TAReport.objects.get(pk=pk)
         report.delete()
         return status204response()
-

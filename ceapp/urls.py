@@ -4,6 +4,7 @@ from .sub_views.views import *
 
 
 urlpatterns = [
+    path('admin-panel/information', AdminInformationAPIView.as_view(), name='admin-information'),
     path('admin-panel/login/', AdminPanelLoginAPIView.as_view(), name='admin-login'),
     path('admin-panel/validate-token/', ValidateTokenAPIView.as_view(), name='validate-token'),
     path('admin-panel/post/', AdminPanelCreatePostAPIView.as_view(), name='admin-post'),
