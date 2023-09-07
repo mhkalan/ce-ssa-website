@@ -48,7 +48,7 @@ def status401response():
     return Response(
                     {
                         'status': status.HTTP_401_UNAUTHORIZED,
-                        'msg': 'این کاربز ادمین نمیباشد'
+                        'msg': 'این کاربر ادمین نمیباشد'
                     },
                     status=status.HTTP_401_UNAUTHORIZED
                 )
