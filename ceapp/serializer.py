@@ -56,6 +56,8 @@ class AdminPanelCreatePostSerializer(serializers.Serializer):
     title = serializers.CharField()
     description = serializers.CharField()
     image = serializers.ImageField()
+    date = serializers.CharField()
+    duration = serializers.CharField()
 
 
 class AdminPanelCreateTASerializer(serializers.Serializer):

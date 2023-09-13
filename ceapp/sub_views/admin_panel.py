@@ -66,11 +66,15 @@ class AdminPanelCreatePostAPIView(generics.ListCreateAPIView):
             serializer = AdminPanelCreatePostSerializer(request.data)
             title = serializer.data['title']
             description = serializer.data['description']
+            date = serializer.data['date']
+            duration = serializer.data['duration']
             image = request.FILES.get('image')
             Post.objects.create(
                 author=author,
                 title=title,
                 description=description,
+                date=date,
+                duration=duration,
                 image=image
             )
             return status201response(serializer.data)

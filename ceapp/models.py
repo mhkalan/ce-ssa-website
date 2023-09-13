@@ -11,6 +11,8 @@ class Post(models.Model):
     image = models.ImageField(upload_to='images/', null=True)
     author = models.ForeignKey(User, on_delete=models.CASCADE)
     created_at = models.DateTimeField(default=timezone.now)
+    date = models.CharField(max_length=255)
+    duration = models.CharField(max_length=255)
 
     def __str__(self):
         return self.author.username
