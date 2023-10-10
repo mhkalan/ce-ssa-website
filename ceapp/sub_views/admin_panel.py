@@ -67,14 +67,12 @@ class AdminPanelCreatePostAPIView(generics.ListCreateAPIView):
             title = serializer.data['title']
             description = serializer.data['description']
             date = serializer.data['date']
-            duration = serializer.data['duration']
             image = request.FILES.get('image')
             Post.objects.create(
                 author=author,
                 title=title,
                 description=description,
                 date=date,
-                duration=duration,
                 image=image
             )
             return status201response(serializer.data)
@@ -98,12 +96,8 @@ class AdminPanelCreateTAAPIView(generics.ListCreateAPIView):
         try:
             serializer = AdminPanelCreateTASerializer(request.data)
             name = serializer.data['name']
-            subject = serializer.data['subject']
-            teacher = serializer.data['teacher']
             TA.objects.create(
                 name=name,
-                subject=subject,
-                teacher=teacher
             )
             return status201response(serializer.data)
         except:
@@ -166,12 +160,8 @@ class AdminPanelTADetailAPIView(generics.ListCreateAPIView):
                 return status404response(msg='حل تمرین مورد نظر یافت نشد')
             serializer = AdminPanelCreateTASerializer(request.data)
             name = serializer.data['name']
-            subject = serializer.data['subject']
-            teacher = serializer.data['teacher']
             ta = TA.objects.get(pk=pk)
             ta.name = name
-            ta.subject = subject
-            ta.teacher = teacher
             ta.save()
             return status201response(serializer.data)
         except:

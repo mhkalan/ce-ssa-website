@@ -12,7 +12,6 @@ class Post(models.Model):
     author = models.ForeignKey(User, on_delete=models.CASCADE)
     created_at = models.DateTimeField(default=timezone.now)
     date = models.CharField(max_length=255)
-    duration = models.CharField(max_length=255)
 
     def __str__(self):
         return self.author.username
@@ -20,8 +19,6 @@ class Post(models.Model):
 
 class TA(models.Model):
     name = models.CharField(max_length=255)
-    subject = models.CharField(max_length=255)
-    teacher = models.CharField(max_length=255)
 
     def __str__(self):
         return self.name

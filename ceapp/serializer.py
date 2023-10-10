@@ -57,13 +57,10 @@ class AdminPanelCreatePostSerializer(serializers.Serializer):
     description = serializers.CharField()
     image = serializers.ImageField()
     date = serializers.CharField()
-    duration = serializers.CharField()
 
 
 class AdminPanelCreateTASerializer(serializers.Serializer):
     name = serializers.CharField()
-    subject = serializers.CharField()
-    teacher = serializers.CharField()
 
 
 class ValidateTokenSerializer(serializers.Serializer):
