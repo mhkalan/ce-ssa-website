@@ -37,10 +37,10 @@ class TAReportSerializer(serializers.Serializer):
 
 class TAReportGetSerializer(serializers.ModelSerializer):
 
-    def get_name(self, obj):
+    def get_TA(self, obj):
         return obj.TA.name
 
-    name = serializers.SerializerMethodField('get_name', read_only=True)
+    TA = serializers.SerializerMethodField('get_TA', read_only=True)
 
     class Meta:
         model = TAReport
