@@ -97,6 +97,10 @@ class AdminPanelCreateSSASerializer(serializers.Serializer):
     members = ListMembersField()
 
 
+# class AdminPanelUpdateSSASerializer(serializers.Serializer):
+#     members = ListMembersField()
+
+
 class InfoSerializer(serializers.ModelSerializer):
 
     class Meta:

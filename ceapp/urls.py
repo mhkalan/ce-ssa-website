@@ -21,6 +21,7 @@ urlpatterns = [
     path('admin-panel/ssa/detail/<int:pk>/', AdminPanelSSADetailAPIView.as_view(), name='admin-ssa-detail'),
     path('admin-panel/ssa/update/<int:pk>/', AdminPanelUpdateSSAAPIView.as_view(), name='admin-ssa-update'),
     path('admin-panel/ssa/delete/<int:pk>/', DeleteSSAAPIView.as_view(), name='delete-ssa'),
+    path('admin-panel/ssa/add-member/<int:pk>', AdminPanelAddMemberToSSAAPIView.as_view(), name='add-member-ssa'),
     path('admin-panel/class/list/', AdminPanelClassListAPIView.as_view(), name='admin-class-list'),
     path('admin-panel/class/create/', AdminPanelCreateClassAPIView.as_view(), name='admin-class-create'),
     path('admin-panel/class/detail/<int:pk>/', AdminPanelClassDetailAPIView.as_view(), name='admin-class-detail'),

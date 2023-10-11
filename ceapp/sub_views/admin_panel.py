@@ -578,3 +578,31 @@ class DeleteTAReportAPIView(generics.DestroyAPIView):
         report = TAReport.objects.get(pk=pk)
         report.delete()
         return status204response()
+
+
+class AdminPanelAddMemberToSSAAPIView(generics.CreateAPIView):
+    serializer_class = AdminPanelCreateMemberSerializer
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request, *args, **kwargs):
+        try:
+            pk = kwargs.get('pk')
+            if not SSA.objects.filter(pk=pk).exists():
+                return status404response('انجمن مورد نظر یافت نشد')
+            ssa_instance = SSA.objects.get(pk=pk)
+            serializer = self.get_serializer(request.data)
+            name = serializer.data['name']
+            position = serializer.data['position']
+            image = request.FILES.get('image')
+            Member.objects.create(
+                name=name,
+                position=position,
+                image=image
+            )
+            member_info = []
+            member = Member.objects.all().order_by('-id')[0]
+            member_info.append(member)
+            ssa_instance.members.add(*member_info)
+            return status201response(serializer.data)
+        except:
+            return status500response()

@@ -17,7 +17,7 @@ def status500response():
     return Response(
                 {
                     'status': status.HTTP_500_INTERNAL_SERVER_ERROR,
-                    "msg": "متاسفانه سرور دچار اخنلال شده است",
+                    "msg": "متاسفانه سرور دچار اختلال شده است",
                 },
                 status=status.HTTP_500_INTERNAL_SERVER_ERROR
             )
