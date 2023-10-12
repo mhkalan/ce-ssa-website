@@ -309,16 +309,16 @@ class AdminPanelCreateSSAAPIView(generics.CreateAPIView):
         try:
             serializer = self.get_serializer(request.data)
             year = serializer.data['year']
-            members = serializer.data['members']
-            members_info = []
-            for i in range(len(members)):
-                if not Member.objects.filter(pk=members[i]).exists():
-                    return status404response(msg='عضو مورد نظر یافت نشد')
-            for i in range(len(members)):
-                member = Member.objects.get(pk=members[i])
-                members_info.append(member)
-            ssa_instance = SSA.objects.create(year=year)
-            ssa_instance.members.set(members_info)
+            # members = serializer.data['members']
+            # members_info = []
+            # for i in range(len(members)):
+            #     if not Member.objects.filter(pk=members[i]).exists():
+            #         return status404response(msg='عضو مورد نظر یافت نشد')
+            # for i in range(len(members)):
+            #     member = Member.objects.get(pk=members[i])
+            #     members_info.append(member)
+            SSA.objects.create(year=year)
+            # ssa_instance.members.set(members_info)
             return status201response(serializer.data)
         except:
             return status500response()
@@ -352,16 +352,16 @@ class AdminPanelUpdateSSAAPIView(generics.CreateAPIView):
             ssa = SSA.objects.get(pk=pk)
             serializer = self.get_serializer(request.data)
             year = serializer.data['year']
-            members = serializer.data['members']
-            members_info = []
-            for i in range(len(members)):
-                if not Member.objects.filter(pk=members[i]).exists():
-                    return status404response(msg='عضو مورد نظر یافت نشد')
-            for i in range(len(members)):
-                member = Member.objects.get(pk=members[i])
-                members_info.append(member)
+            # members = serializer.data['members']
+            # members_info = []
+            # for i in range(len(members)):
+            #     if not Member.objects.filter(pk=members[i]).exists():
+            #         return status404response(msg='عضو مورد نظر یافت نشد')
+            # for i in range(len(members)):
+            #     member = Member.objects.get(pk=members[i])
+            #     members_info.append(member)
             ssa.year = year
-            ssa.members.set(members_info)
+            # ssa.members.set(members_info)
             ssa.save()
             return status201response(serializer.data)
         except:
@@ -599,10 +599,62 @@ class AdminPanelAddMemberToSSAAPIView(generics.CreateAPIView):
                 position=position,
                 image=image
             )
-            member_info = []
             member = Member.objects.all().order_by('-id')[0]
-            member_info.append(member)
+            member_info = [member]
             ssa_instance.members.add(*member_info)
             return status201response(serializer.data)
         except:
             return status500response()
+
+
+class AdminPanelDeleteMemberFromSSAAPIView(generics.DestroyAPIView):
+    permission_classes = [IsAuthenticated]
+
+    def delete(self, request, *args, **kwargs):
+        try:
+            ssa_pk = kwargs.get('ssa')
+            member_pk = kwargs.get('member')
+            if not SSA.objects.filter(pk=ssa_pk).exists():
+                return status404response('انجمن مورد نظر یافت نشد')
+            if not Member.objects.filter(pk=member_pk).exists():
+                return status404response('عضو مورد نظر یافت نشد')
+            member_instance = Member.objects.get(pk=member_pk)
+            ssa_instance = SSA.objects.get(pk=ssa_pk)
+            ssa_instance.members.remove(member_instance)
+            return status204response()
+        except:
+            return status500response()
+
+
+class AdminPanelEditMemberSSAAPIView(generics.CreateAPIView):
+    serializer_class = AdminPanelCreateMemberSerializer
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request, *args, **kwargs):
+        try:
+            ssa_pk = kwargs.get('ssa')
+            member_pk = kwargs.get('member')
+            if not SSA.objects.filter(pk=ssa_pk).exists():
+                return status404response('انجمن مورد نظر یافت نشد')
+            if not Member.objects.filter(pk=member_pk).exists():
+                return status404response('عضو مورد نظر یافت نشد')
+            member_instance = None
+            ssa_instance = SSA.objects.get(pk=ssa_pk)
+            serializer = self.get_serializer(request.data)
+            name = serializer.data['name']
+            position = serializer.data['position']
+            image = request.FILES.get('image')
+            for member in ssa_instance.members.all():
+                if member.pk == member_pk:
+                    member_instance = member
+                    ssa_instance.members.remove(member)
+            member_instance.name = name
+            member_instance.position = position
+            member_instance.image = image
+            member_instance.save()
+            member_info = [member_instance]
+            ssa_instance.members.add(*member_info)
+            return status200response(serializer.data)
+        except:
+            return status500response()
+

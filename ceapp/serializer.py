@@ -88,17 +88,13 @@ class SSASerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 
-class ListMembersField(serializers.ListField):
-    child = serializers.IntegerField()
+# class ListMembersField(serializers.ListField):
+#     child = serializers.IntegerField()
 
 
 class AdminPanelCreateSSASerializer(serializers.Serializer):
     year = serializers.IntegerField()
-    members = ListMembersField()
-
-
-# class AdminPanelUpdateSSASerializer(serializers.Serializer):
-#     members = ListMembersField()
+    # members = ListMembersField()
 
 
 class InfoSerializer(serializers.ModelSerializer):

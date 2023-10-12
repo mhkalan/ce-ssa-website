@@ -60,7 +60,7 @@ class Member(models.Model):
 
 class SSA(models.Model):
     year = models.PositiveIntegerField()
-    members = models.ManyToManyField(Member)
+    members = models.ManyToManyField(Member, blank=True)
 
     def __str__(self):
         return f"Company {self.year}"
