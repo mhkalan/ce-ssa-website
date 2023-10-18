@@ -130,5 +130,5 @@ class AdminPanelCreateClassSerializer(serializers.Serializer):
     ta_class = serializers.CharField()
     channel_link = serializers.CharField()
     ta = ListTAField()
-    image = serializers.ImageField()
+    image = serializers.ImageField(required=False)
 
