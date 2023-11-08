@@ -427,7 +427,7 @@ class AdminPanelCreateClassAPIView(generics.CreateAPIView):
     permission_classes = [IsAuthenticated]
 
     def post(self, request, *args, **kwargs):
-        try:
+        #try:
             serializer = self.get_serializer(request.data)
             name = serializer.data['name']
             group_number = serializer.data['group_number']
@@ -455,8 +455,8 @@ class AdminPanelCreateClassAPIView(generics.CreateAPIView):
             )
             class_instance.ta.set(ta_info)
             return status201response(serializer.data)
-        except:
-            return status500response()
+        #except:
+            #return status500response()
 
 
 class AdminPanelClassDetailAPIView(generics.ListAPIView):
@@ -480,7 +480,7 @@ class AdminPanelUpdateClassAPIView(generics.CreateAPIView):
     permission_classes = [IsAuthenticated]
 
     def post(self, request, *args, **kwargs):
-        try:
+        #try:
             pk = kwargs.get('pk')
             if not Class.objects.filter(pk=pk).exists():
                 return status404response(msg='درس مورد نظر یافت نشد')
@@ -511,8 +511,8 @@ class AdminPanelUpdateClassAPIView(generics.CreateAPIView):
             class_info.ta.set(ta_info)
             class_info.save()
             return status201response(serializer.data)
-        except:
-            return status500response()
+        #except:
+            #return status500response()
 
 
 class DeleteSSAAPIView(generics.DestroyAPIView):
