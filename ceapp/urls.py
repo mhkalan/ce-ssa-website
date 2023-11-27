@@ -4,6 +4,7 @@ from .sub_views.views import *
 
 
 urlpatterns = [
+    path('', NotFoundAPIView.as_view(), name='not-found'),
     path('admin-panel/information', AdminInformationAPIView.as_view(), name='admin-information'),
     path('admin-panel/login/', AdminPanelLoginAPIView.as_view(), name='admin-login'),
     path('admin-panel/validate-token/', ValidateTokenAPIView.as_view(), name='validate-token'),
@@ -52,4 +53,5 @@ urlpatterns = [
 
     path('class/', ClassListAPIView.as_view(), name='class-list'),
     path('class/<int:pk>/', ClassDetailAPIView.as_view(), name='class-detail'),
+    path('<path:unmatched_path>', NotFoundAPIView.as_view(), name='not-found'),
 ]

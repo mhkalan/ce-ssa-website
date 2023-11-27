@@ -2,6 +2,9 @@ from django.contrib.auth import authenticate, get_user_model
 from rest_framework import generics
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework_simplejwt.tokens import RefreshToken, AccessToken
+from rest_framework.views import APIView
+from rest_framework.response import Response
+from rest_framework import status
 
 from ..serializer import *
 from ..models import *
@@ -9,7 +12,11 @@ from ..utills import *
 
 User = get_user_model()
 
-
+class NotFoundAPIView(APIView):
+    def get(self, request, *args, **kwargs):
+        return Response({"detail": "Not found."}, status=status.HTTP_404_NOT_FOUND)
+        
+        
 class AdminInformationAPIView(generics.ListAPIView):
     serializer_class = SuperuserSerializer
     permission_classes = [IsAuthenticated]
@@ -657,4 +664,6 @@ class AdminPanelEditMemberSSAAPIView(generics.CreateAPIView):
             return status200response(serializer.data)
         except:
             return status500response()
+
+
 

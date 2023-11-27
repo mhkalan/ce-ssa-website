@@ -1,7 +1,6 @@
 from rest_framework import generics
 from rest_framework.permissions import AllowAny
 
-
 from ..serializer import *
 from ..models import *
 from ..utills import *
@@ -154,4 +153,5 @@ class ClassDetailAPIView(generics.ListAPIView):
             return status200response(serializer.data)
         except:
             return status500response()
+
 
