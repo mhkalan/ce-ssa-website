@@ -26,7 +26,7 @@ SECRET_KEY = 'django-insecure-hwiz-7(=r32tl+b2km+nc1byh8^v9j&+19r$g63+i%po2i$ot_
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['api.ceatnit.ir']
 
 
 # Application definition
